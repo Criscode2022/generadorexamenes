@@ -1,0 +1,48 @@
+/* You can add global styles to this file, and also import other style files */
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+
+body {
+
+	background: #d1d6b2;
+}
+
+
+
+.hidden {
+  display: none;
+}
+
+
+
+
+header {
+
+  background:
+  radial-gradient(circle at center, #b6e690, #84b058 75%),
+  linear-gradient(to right, #84b058, #b6e690, #84b058),
+  linear-gradient(to bottom, #84b058, #b6e690, #84b058);  box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.75) !important;
+
+}
+
+app-header {
+
+  box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.75) !important;
+
+}
+
+.cdk-overlay-pane.mat-mdc-menu-panel {
+  width: auto !important;
+}
+
+#mi-menu-unico .cdk-overlay-pane.mat-mdc-menu-panel {
+  width: auto !important;
+}
+
+:host {
+  overflow-x: hidden;
+}
+
+

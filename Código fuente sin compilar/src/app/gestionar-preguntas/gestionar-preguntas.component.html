@@ -1,0 +1,29 @@
+<body>
+  <mat-button-toggle-group name="gestion" aria-label="Font Style">
+    <mat-button-toggle
+      [routerLink]="[
+        '/app/gestionarpreguntas',
+        { outlets: { gestionar: ['agregar'] } }
+      ]"
+      >Agregar pregunta</mat-button-toggle
+    >
+
+    <mat-button-toggle
+      [routerLink]="[
+        '/app/gestionarpreguntas',
+        { outlets: { gestionar: ['modificar'] } }
+      ]"
+      >Modificar pregunta</mat-button-toggle
+    >
+
+    <mat-button-toggle
+      [routerLink]="[
+        '/app/gestionarpreguntas',
+        { outlets: { gestionar: ['eliminar'] } }
+      ]"
+      >Eliminar pregunta</mat-button-toggle
+    >
+  </mat-button-toggle-group>
+
+  <router-outlet name="gestionar"></router-outlet>
+</body>

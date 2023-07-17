@@ -1,0 +1,185 @@
+<main>
+  <section id="formulario">
+    <h2>Configura tu examen</h2>
+    <form
+      [formGroup]="form"
+      (ngSubmit)="
+        devolverpreguntas(); this.examenGenerado = true; this.mostrar = false
+      "
+    >
+      <h3>Temas</h3>
+      <mat-form-field appearance="fill">
+        <mat-label>Temas</mat-label>
+
+        <ng-container *ngIf="listaTemas$ | async as lt; else loading">
+          <mat-select formControlName="temas" multiple>
+            <mat-option *ngFor="let tema of lt" [value]="tema.tema">{{
+              tema.tema
+            }}</mat-option>
+          </mat-select>
+
+          <mat-error
+            *ngIf="form.get('temas')?.errors?.['required'] && submitted"
+          >
+            Este campo es obligatorio
+          </mat-error>
+        </ng-container>
+
+        <ng-template #loading>
+          <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+        </ng-template>
+      </mat-form-field>
+
+      <ul
+        *ngIf="form.get('temas')?.value && form.get('temas')?.value.length > 0"
+      >
+        <strong>Temas seleccionados</strong>
+        <li *ngFor="let tema of form.get('temas')?.value">
+          <strong>{{ tema }}</strong>
+        </li>
+      </ul>
+
+      <h3>Dificultad</h3>
+      <mat-radio-group
+        aria-labelledby="example-radio-group-label"
+        class="example-radio-group"
+        formControlName="dificultad"
+      >
+        <mat-radio-button
+          class="example-radio-button"
+          *ngFor="let dificultad of dificultades"
+          [value]="dificultad"
+        >
+          {{ dificultad }}
+        </mat-radio-button>
+      </mat-radio-group>
+
+      <h3>Número de preguntas</h3>
+      <mat-form-field class="example-full-width">
+        <mat-label>Preguntas</mat-label>
+        <input
+          formControlName="numeroPreguntas"
+          matInput
+          placeholder="Máximo 100 preguntas"
+          type="number"
+          min="0"
+          max="100"
+        />
+
+        <mat-error
+          *ngIf="form.get('numeroPreguntas')?.errors?.['required'] && submitted"
+        >
+          Este campo es obligatorio
+        </mat-error>
+      </mat-form-field>
+
+      <p>
+        <button mat-raised-button color="primary" type="submit">
+          Generar examen
+        </button>
+      </p>
+    </form>
+  </section>
+
+  <section id="resultado" *ngIf="examenGenerado">
+    <div>
+      <h2>Tu examen</h2>
+      <div class="grid-container">
+        <div *ngFor="let pregunta of preguntas; let i = index">
+          <p>
+            <strong>{{ i + 1 }}. {{ pregunta.pregunta }}</strong>
+          </p>
+          <mat-radio-group
+            [name]="'pregunta' + i"
+            [(ngModel)]="respuestasUsuario[i]"
+            [disabled]="mostrar"
+          >
+            <div *ngFor="let respuesta of pregunta.respuestas">
+              <p>
+                <mat-radio-button
+                  class="example-margin"
+                  [value]="respuesta.respuesta"
+                >
+                  {{ respuesta.respuesta }}
+                  <span
+                    *ngIf="mostrar"
+                    [ngStyle]="{
+                      color: respuesta.es_correcta === 'SI' ? 'green' : 'red'
+                    }"
+                  >
+                    - {{ respuesta.es_correcta }}
+                  </span>
+                </mat-radio-button>
+              </p>
+            </div>
+          </mat-radio-group>
+        </div>
+      </div>
+    </div>
+
+    <p id="comprobarEscritorio">
+      <button
+        class="comprobarbtn"
+        id="comprobarbtnD"
+        mat-raised-button
+        color="primary"
+        (click)="contarRespuestasCorrectasEscritorio(); mostrar = true"
+      >
+        Comprobar respuestas
+      </button>
+    </p>
+
+    <p id="comprobarMobile">
+      <button
+        class="comprobarbtn"
+        id="comprobarbtnD"
+        mat-raised-button
+        color="primary"
+        (click)="contarRespuestasCorrectasMobile(); mostrar = true"
+      >
+        Comprobar respuestas
+      </button>
+    </p>
+  </section>
+
+  <section id="puntuacion">
+    <div id="actual" *ngIf="mostrar">
+      <h2>Puntuación de este examen</h2>
+      <h4>
+        Respuestas correctas: {{ respuestasCorrectas }}/{{ preguntas.length }}
+      </h4>
+    </div>
+
+    <h2>Historial de examenes</h2>
+
+    <ol>
+      <li *ngFor="let resultado of resultadosExamenes">
+        Aciertos: {{ resultado.respuestasCorrectas }} - Preguntas:
+        {{ resultado.totalPreguntas }} - Puntuacion:
+        {{
+          (resultado.respuestasCorrectas / resultado.totalPreguntas) * 10
+            | number : "1.2-2"
+        }}
+      </li>
+    </ol>
+  </section>
+</main>
+
+<div *ngIf="this.form.valid && examenGenerado" id="Download">
+  <button
+    mat-icon-button
+    [matMenuTriggerFor]="menu"
+    aria-label="Example icon-button with a menu"
+    id="mi-menu-unico"
+  >
+    <mat-icon>save_alt</mat-icon>
+  </button>
+  <mat-menu #menu="matMenu" id="menu">
+    <button mat-menu-item (click)="descargarRespuestas()">
+      <span class="btn">Descargar hoja de respuestas</span>
+    </button>
+    <button mat-menu-item (click)="descargarPreguntas()">
+      <span class="btn">Descargar examen</span>
+    </button>
+  </mat-menu>
+</div>

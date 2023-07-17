@@ -1,0 +1,154 @@
+<h2>Modificar pregunta</h2>
+
+<h3>Selecciona la pregunta que quieres modificar</h3>
+<mat-autocomplete
+  #auto="matAutocomplete"
+  [displayWith]="displayFn"
+  (optionSelected)="setPreguntaSeleccionada($event)"
+>
+  <mat-option *ngFor="let pregunta of preguntasFiltradas" [value]="pregunta">
+    {{ pregunta.pregunta }}
+  </mat-option>
+</mat-autocomplete>
+
+<mat-form-field appearance="fill">
+  <input
+    type="text"
+    placeholder="Elige la pregunta"
+    aria-label="Number"
+    matInput
+    [formControl]="preguntaSeleccionadaModificar"
+    [matAutocomplete]="auto"
+    [value]="preguntaSeleccionadaModificar?.value?.pregunta || ''"
+    (input)="filtrarPreguntas(preguntaSeleccionadaModificar.value)"
+  />
+</mat-form-field>
+
+<h3>Selecciona el tema de la pregunta</h3>
+<mat-form-field appearance="fill">
+  <mat-label>Temas</mat-label>
+  <mat-select [formControl]="temas">
+    <mat-option *ngFor="let tema of ListaTemas" [value]="tema">
+      {{ tema.tema }}
+    </mat-option>
+  </mat-select>
+</mat-form-field>
+
+<h3>Selecciona la dificultad</h3>
+<mat-radio-group
+  aria-labelledby="example-radio-group-label"
+  class="example-radio-group"
+  [(ngModel)]="dificultadSeleccionadaModificar"
+  name="dificultadSeleccionadaModificar"
+>
+  <mat-radio-button
+    class="example-radio-button"
+    *ngFor="let dificultad of dificultades"
+    [value]="dificultad"
+  >
+    {{ dificultad }}
+  </mat-radio-button>
+</mat-radio-group>
+
+<div>
+  La dificultad seleccionada es:
+  <strong>{{ dificultadSeleccionadaModificar }}</strong>
+</div>
+
+<h3>Introduce la pregunta</h3>
+<mat-form-field class="example-full-width">
+  <mat-label>Enunciado Pregunta</mat-label>
+  <input
+    [(ngModel)]="enunciadoModificar"
+    name="enunciadoModificar"
+    matInput
+    placeholder="Enunciado Pregunta"
+    type="text"
+    maxlength="255"
+  />
+</mat-form-field>
+
+<div id="respuestas">
+  <h3>Introduce las respuestas y marca la correcta</h3>
+
+  <div class="respuesta">
+    <mat-radio-button
+      class="example-radio-button"
+      (click)="setRespuestaCorrecta('1')"
+    ></mat-radio-button>
+    <mat-form-field class="example-full-width">
+      <mat-label>Respuesta 1</mat-label>
+      <input
+        [(ngModel)]="respuesta1"
+        name="respuesta1"
+        matInput
+        placeholder="Respuesta 1"
+        type="text"
+        maxlength="255"
+      />
+    </mat-form-field>
+  </div>
+
+  <div class="respuesta">
+    <mat-radio-button
+      class="example-radio-button"
+      (click)="setRespuestaCorrecta('2')"
+    ></mat-radio-button>
+    <mat-form-field class="example-full-width">
+      <mat-label>Respuesta 2</mat-label>
+      <input
+        [(ngModel)]="respuesta2"
+        name="respuesta2"
+        matInput
+        placeholder="Respuesta 2"
+        type="text"
+        maxlength="255"
+      />
+    </mat-form-field>
+  </div>
+
+  <div class="respuesta">
+    <mat-radio-button
+      class="example-radio-button"
+      (click)="setRespuestaCorrecta('3')"
+    ></mat-radio-button>
+    <mat-form-field class="example-full-width">
+      <mat-label>Respuesta 3</mat-label>
+      <input
+        [(ngModel)]="respuesta3"
+        name="respuesta3"
+        matInput
+        placeholder="Respuesta 3"
+        type="text"
+        maxlength="255"
+      />
+    </mat-form-field>
+  </div>
+</div>
+
+<div class="respuesta">
+  <mat-radio-button
+    class="example-radio-button"
+    (click)="setRespuestaCorrecta('4')"
+  ></mat-radio-button>
+  <mat-form-field class="example-full-width">
+    <mat-label>Respuesta 4</mat-label>
+    <input
+      [(ngModel)]="respuesta4"
+      name="respuesta4"
+      matInput
+      placeholder="Respuesta 4"
+      type="text"
+      maxlength="255"
+    />
+  </mat-form-field>
+</div>
+
+<button mat-raised-button color="primary" (click)="modificarPregunta()">
+  Modificar Pregunta
+</button>
+
+<h3 class="resultado">{{ mensajeModificar }}</h3>
+<h3 class="resultado" [innerHTML]="mensajeModificarRespuestas">
+  {{ mensajeModificarRespuestas }}
+</h3>
