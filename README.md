@@ -1,7 +1,7 @@
 # Generador de exámenes
 
 
-## Introducción
+## Descripción
 
 Esta aplicación Full Stack está construida con un patrón de diseño MVC en todas sus capas, desde el cliente al servidor. Su objetivo principal es la generación de exámenes aleatorios a partir de preguntas tipo test almacenados en una base de datos con sus correspondientes respuestas. Estas preguntas están clasificadas por tema y dificultad y cada una de ellas tiene 4 opciones de respuesta, de las cuales solo una es verdadera.
 
