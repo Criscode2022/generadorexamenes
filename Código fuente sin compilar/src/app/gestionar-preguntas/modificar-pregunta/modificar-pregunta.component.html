@@ -19,7 +19,7 @@
     matInput
     [formControl]="preguntaSeleccionadaModificar"
     [matAutocomplete]="auto"
-    [value]="preguntaSeleccionadaModificar?.value?.pregunta || ''"
+    [value]="preguntaSeleccionadaModificar.value?.pregunta || ''"
     (input)="filtrarPreguntas(preguntaSeleccionadaModificar.value)"
   />
 </mat-form-field>

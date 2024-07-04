@@ -17,7 +17,7 @@
     matInput
     [formControl]="preguntaSeleccionadaEliminar"
     [matAutocomplete]="auto"
-    [value]="preguntaSeleccionadaEliminar?.value?.pregunta || ''"
+    [value]="preguntaSeleccionadaEliminar.value?.pregunta || ''"
     (input)="filtrarPreguntas(preguntaSeleccionadaEliminar.value)"
   />
 </mat-form-field>

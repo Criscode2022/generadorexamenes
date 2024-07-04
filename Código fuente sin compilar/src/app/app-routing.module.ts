@@ -1,13 +1,10 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { BienvenidaComponent } from './bienvenida/bienvenida.component';
-import { NotFoundComponent } from './not-found/not-found.component';
 import { LayoutComponent } from './layout/layout.component';
-import { GestionarPreguntasRoutingModule } from './gestionar-preguntas/gestionar-preguntas-routing.module';
+import { NotFoundComponent } from './not-found/not-found.component';
 
 const routes: Routes = [
-  { path: '', pathMatch: 'full', redirectTo: 'bienvenida' },
-  { path: 'bienvenida', pathMatch: 'full', component: BienvenidaComponent },
+  { path: '', pathMatch: 'full', redirectTo: 'app/examenes' },
   {
     path: 'app',
     component: LayoutComponent,

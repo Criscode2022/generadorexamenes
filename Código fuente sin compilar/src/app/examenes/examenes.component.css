@@ -5,63 +5,47 @@ body {
   justify-content: center;
 }
 
- .comprobarbtn {
-
-      background-color: yellow !important;
-      text-align: center !important;
-      display: block;
-      color: black;
-      margin-left: auto;
-      margin-right: auto;
-      margin-bottom: 20pt;
-    }
-
+.comprobarbtn {
+  background-color: yellow !important;
+  text-align: center !important;
+  display: block;
+  color: black;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 20pt;
+}
 
 h2 {
-
   width: 100%;
   display: inline-block;
   text-align: center;
 }
 
 #Download {
-
   width: auto !important;
-
 }
 
 #menu {
   width: auto !important;
-
-
 }
 
 #Download * {
-
   width: auto !important;
-
 }
 
 ::ng-deep .mat-mdc-menu-item {
   width: auto !important;
 }
 
-
 #Download button {
-
   width: auto !important;
 }
 
-#menu *{
+#menu * {
   width: auto !important;
-
-
 }
 
-
-
 #Download button {
-
   position: fixed;
   bottom: 0;
   right: 0;
@@ -70,18 +54,20 @@ h2 {
   overflow-x: hidden !important;
   overflow: hidden !important;
   color: white;
-  box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.75) !important;
-
+  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.75) !important;
 }
 
-
+strong {
+  margin-top: 10px;
+  color: red;
+}
 
 main {
   display: flex;
   justify-content: space-around;
   position: relative;
   top: 20px;
-  margin: 20pt ;
+  margin: 20pt;
 }
 
 #resultado {
@@ -89,17 +75,16 @@ main {
 }
 
 #formulario {
-
   width: 20%;
 }
-
 
 h3 {
   font-weight: bold;
   margin: 20px 0;
 }
 
-ul, li {
+ul,
+li {
   margin: 20px 0;
 }
 
@@ -113,55 +98,43 @@ button {
   left: 0;
 }
 
-
-
 #resultado h2 {
   width: 100% !important;
 }
 
-.botonDescargar{
-
-
+.botonDescargar {
   border-radius: 30pt;
   padding-top: 15pt;
   padding-bottom: 15pt;
   padding-right: 30pt;
   background: #a23131 !important;
   color: white !important;
-  box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.75) !important;
+  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.75) !important;
 }
 
 .mat-mdc-menu-item button {
   border-radius: 2pt;
   background: #a23131 !important;
   color: white !important;
-  box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.75) !important;
+  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.75) !important;
   margin: 0;
   padding: 0;
 }
 
 #descargarExamen {
-
   position: fixed !important;
   left: 55px !important;
   margin: 20pt;
   bottom: 20px;
-
 }
 
 #descargarRespuestas {
-
   position: fixed !important;
   left: 10px !important;
   bottom: 80px !important;
-
 }
 
-
-
-
 #botonTraducir {
-
   position: fixed !important;
   right: 10px !important;
   margin: 20pt;
@@ -169,91 +142,55 @@ button {
   border-radius: 30pt;
   padding-top: 15pt;
   padding-bottom: 15pt;
-  padding-right:0 !important;
-  padding-left:0 !important;
-
-
+  padding-right: 0 !important;
+  padding-left: 0 !important;
 }
 
-
 #actual {
-
   color: rgb(110, 0, 110);
   background-color: white !important;
   border: solid black 1px !important;
-  box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.75);
+  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.75);
   padding: 20pt;
   border-radius: 10pt;
   margin-bottom: 20pt;
-
-
 }
 
-
-
-
-
-
 @media (max-width: 835px) {
-
   mat-radio-group {
-
     display: flex;
     flex-direction: column;
   }
 }
 
-  @media (max-width: 425px) {
+@media (max-width: 425px) {
+  main {
+    display: flex;
+    flex-direction: column;
+  }
 
-    main {
-      display: flex;
-      flex-direction: column;
+  #comprobarEscritorio {
+    display: none;
+  }
 
-    }
+  #comprobarbtnM {
+    padding-left: 10pt;
+    padding-right: 10pt;
+    padding-top: 10pt;
+    padding-bottom: 20pt;
+  }
 
-    #comprobarEscritorio {
+  #formulario {
+    width: 100% !important;
+  }
 
-      display: none;
-    }
-
-    #comprobarbtnM {
-
-      padding-left: 10pt;
-      padding-right: 10pt;
-      padding-top: 10pt;
-      padding-bottom: 20pt;
-
-
-    }
-
-
-    #formulario {
-      width: 100% !important;
-    }
-
-
-    #resultado {
-
-      width: 100% !important;
-    }
-
-
-
-
-
-
-
+  #resultado {
+    width: 100% !important;
+  }
 }
 
 @media (min-width: 426px) {
-
-
-#comprobarMobile {
-
-display: none;
-
-}
-
-
-
+  #comprobarMobile {
+    display: none;
+  }
 }
