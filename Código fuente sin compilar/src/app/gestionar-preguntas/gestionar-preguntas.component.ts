@@ -1,11 +1,9 @@
-import { Component, OnInit } from '@angular/core';
-import { FormControl, Validators, FormGroup } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
-import { Tema } from 'src/main';
-import { Pregunta } from 'src/main';
-import { Router, NavigationEnd } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { FormControl } from '@angular/forms';
+import { Router } from '@angular/router';
+import { Pregunta, Tema } from 'src/main';
 import { ServicioDatosService } from '../servicio-datos.service';
-import { MatOptionModule } from '@angular/material/core';
 
 @Component({
   selector: 'app-gestionar-preguntas',
@@ -14,10 +12,10 @@ import { MatOptionModule } from '@angular/material/core';
 })
 export class GestionarPreguntasComponent implements OnInit {
   temas = new FormControl();
-  ListaTemas: Tema[] = [];
-  dificultades: number[] = [1, 2, 3];
-  dificultadSeleccionadaAgregar: number = this.dificultades[0];
-  dificultadSeleccionadaModificar: number = this.dificultades[0];
+  themesList: Tema[] = [];
+  difficulties: number[] = [1, 2, 3];
+  dificultadSeleccionadaAgregar: number = this.difficulties[0];
+  dificultadSeleccionadaModificar: number = this.difficulties[0];
   enunciado: string = '';
   enunciadoModificar: string = '';
   respuesta1: string = '';
@@ -28,7 +26,7 @@ export class GestionarPreguntasComponent implements OnInit {
   respuesta2Correcta: string = 'NO';
   respuesta3Correcta: string = 'NO';
   respuesta4Correcta: string = 'NO';
-  temaSeleccionado: Tema = this.ListaTemas[0];
+  temaSeleccionado: Tema = this.themesList[0];
   idPreguntaInsertada: number | undefined = 0;
   respuestaCorrecta: number = 0;
   rutaCambiada = false;
@@ -60,7 +58,7 @@ export class GestionarPreguntasComponent implements OnInit {
     this.ServicioDatosService.temas$.subscribe(
       (data) => {
         if (data) {
-          this.ListaTemas = data;
+          this.themesList = data;
         }
       },
       (error) => {

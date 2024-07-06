@@ -4,14 +4,14 @@
     <form
       [formGroup]="form"
       (ngSubmit)="
-        devolverpreguntas(); this.examenGenerado = true; this.mostrar = false
+        devolverpreguntas(); this.examenGenerado = true; this.show = false
       "
     >
       <h3>Temas</h3>
       <mat-form-field appearance="fill">
         <mat-label>Temas</mat-label>
 
-        <ng-container *ngIf="listaTemas$ | async as lt; else loading">
+        <ng-container *ngIf="themesList$ | async as lt; else loading">
           <mat-select formControlName="temas" multiple>
             <mat-option *ngFor="let tema of lt" [value]="tema.tema">{{
               tema.tema
@@ -37,9 +37,7 @@
         </ng-template>
       </mat-form-field>
 
-      <ul
-        *ngIf="form.get('temas')?.value && form.get('temas')?.value.length > 0"
-      >
+      <ul *ngIf="form.get('temas')?.value">
         <strong>Temas seleccionados</strong>
         <li *ngFor="let tema of form.get('temas')?.value">
           <strong>{{ tema }}</strong>
@@ -54,7 +52,7 @@
       >
         <mat-radio-button
           class="example-radio-button"
-          *ngFor="let dificultad of dificultades"
+          *ngFor="let dificultad of difficulties"
           [value]="dificultad"
         >
           {{ dificultad }}
@@ -99,7 +97,7 @@
           <mat-radio-group
             [name]="'pregunta' + i"
             [(ngModel)]="respuestasUsuario[i]"
-            [disabled]="mostrar"
+            [disabled]="show"
           >
             <div *ngFor="let respuesta of pregunta.respuestas">
               <p>
@@ -109,7 +107,7 @@
                 >
                   {{ respuesta.respuesta }}
                   <span
-                    *ngIf="mostrar"
+                    *ngIf="show"
                     [ngStyle]="{
                       color: respuesta.es_correcta === 'SI' ? 'green' : 'red'
                     }"
@@ -130,7 +128,7 @@
         id="comprobarbtnD"
         mat-raised-button
         color="primary"
-        (click)="contarRespuestasCorrectasEscritorio(); mostrar = true"
+        (click)="contarRespuestasCorrectasEscritorio(); show = true"
       >
         Comprobar respuestas
       </button>
@@ -142,7 +140,7 @@
         id="comprobarbtnD"
         mat-raised-button
         color="primary"
-        (click)="contarRespuestasCorrectasMobile(); mostrar = true"
+        (click)="contarRespuestasCorrectasMobile(); show = true"
       >
         Comprobar respuestas
       </button>
@@ -150,7 +148,7 @@
   </section>
 
   <section id="puntuacion">
-    <div id="actual" *ngIf="mostrar">
+    <div id="actual" *ngIf="show">
       <h2>Puntuación de este examen</h2>
       <h4>
         Respuestas correctas: {{ respuestasCorrectas }}/{{ preguntas.length }}

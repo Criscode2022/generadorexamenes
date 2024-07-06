@@ -1,25 +1,11 @@
-import { Component, OnInit } from '@angular/core';
-import {
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  Validators,
-} from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
-import { MatFormField } from '@angular/material/form-field';
-import { Router } from '@angular/router';
-import { Respuesta } from 'src/main';
-import { Observable, BehaviorSubject, of } from 'rxjs';
-import { Tema } from 'src/main';
-import { Pregunta } from 'src/main';
-import { RespuestaServidor } from 'src/main';
+import { Component, inject, OnInit } from '@angular/core';
+import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { saveAs } from 'file-saver';
-import { HeaderComponent } from '../header/header.component';
-import { MatButtonModule } from '@angular/material/button';
-import { ServicioDatosService } from '../servicio-datos.service';
+import { Observable, of } from 'rxjs';
+import { Pregunta, RespuestaServidor, Tema } from 'src/main';
 import * as XLSX from 'xlsx';
-import { MatAutocompleteModule } from '@angular/material/autocomplete';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { ServicioDatosService } from '../servicio-datos.service';
 
 @Component({
   selector: 'app-examenes',
@@ -27,51 +13,48 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
   styleUrls: ['./examenes.component.css'],
 })
 export class ExamenesComponent implements OnInit {
-  dificultades = [1, 2, 3];
-  listaTemas$: Observable<Tema[]> = of([]);
-  preguntas: Pregunta[] = [];
-  examenGenerado: boolean = false;
-  form: FormGroup;
-  loading: boolean = false; //Indicador spinner en caso de que la lista de temas tarde en cargar
-  respuestasUsuario: string[] = [];
-  mostrar = false;
-  resultadosExamenes: any[] = [];
-  respuestasCorrectas = 0;
-  public submitted = false;
+  protected difficulties = [1, 2, 3];
+  protected preguntas: Pregunta[] = [];
+  protected examenGenerado: boolean = false;
+  protected respuestasUsuario: string[] = [];
+  protected resultadosExamenes: any[] = [];
+  protected respuestasCorrectas = 0;
 
-  constructor(
-    private http: HttpClient,
-    private router: Router,
-    private ServicioDatosService: ServicioDatosService,
-    private fb: FormBuilder
-  ) {
-    this.listaTemas$ = this.ServicioDatosService.temas$;
-    this.form = this.fb.group({
-      temas: new FormControl([], Validators.required),
-      dificultad: new FormControl('', Validators.required),
-      numeroPreguntas: new FormControl(null, [
-        Validators.required,
-        Validators.min(1),
-        Validators.max(100),
-      ]),
-    });
-  }
+  protected themesList$: Observable<Tema[]> = of([]);
+
+  protected show = false;
+  protected loading: boolean = false;
+  protected submitted = false;
+
+  private http = inject(HttpClient);
+  private ServicioDatosService = inject(ServicioDatosService);
+  private fb = inject(FormBuilder);
+
+  private skeleton = {
+    temas: new FormControl([], Validators.required),
+    dificultad: new FormControl('', Validators.required),
+    numeroPreguntas: new FormControl(null, [
+      Validators.required,
+      Validators.min(1),
+      Validators.max(100),
+    ]),
+  };
+
+  protected form = this.fb.group(this.skeleton);
 
   ngOnInit() {
     this.cargarResultados();
-    this.listaTemas$ = this.ServicioDatosService.temas$;
+    this.themesList$ = this.ServicioDatosService.temas$;
   }
 
-  contarRespuestasCorrectasEscritorio() {
+  protected contarRespuestasCorrectasEscritorio() {
     let respuestasCorrectasUsuario = 0;
 
     for (let i = 0; i < this.preguntas.length; i++) {
-      let pregunta = this.preguntas[i];
-      let respuestaUsuario = this.respuestasUsuario[i];
-      console.log('La pregunta es ' + JSON.stringify(pregunta));
-      console.log('La respuesta es ' + respuestaUsuario);
+      const pregunta = this.preguntas[i];
+      const respuestaUsuario = this.respuestasUsuario[i];
 
-      for (let respuesta of pregunta.respuestas) {
+      for (const respuesta of pregunta.respuestas) {
         if (
           respuesta.respuesta === respuestaUsuario &&
           respuesta.es_correcta === 'SI'
@@ -91,7 +74,6 @@ export class ExamenesComponent implements OnInit {
     localStorage.setItem(id, JSON.stringify(resultado));
     this.cargarResultados();
 
-    //Scroll hacia la parte inicial de la página al hacer click en el botón que llama a la función
     window.scrollTo({
       top: 0,
       behavior: 'smooth',
@@ -100,16 +82,14 @@ export class ExamenesComponent implements OnInit {
     return respuestasCorrectasUsuario;
   }
 
-  contarRespuestasCorrectasMobile() {
+  protected contarRespuestasCorrectasMobile() {
     let respuestasCorrectasUsuario = 0;
 
     for (let i = 0; i < this.preguntas.length; i++) {
       let pregunta = this.preguntas[i];
-      let respuestaUsuario = this.respuestasUsuario[i];
-      console.log('La pregunta es ' + JSON.stringify(pregunta));
-      console.log('La respuesta es ' + respuestaUsuario);
+      const respuestaUsuario = this.respuestasUsuario[i];
 
-      for (let respuesta of pregunta.respuestas) {
+      for (const respuesta of pregunta.respuestas) {
         if (
           respuesta.respuesta === respuestaUsuario &&
           respuesta.es_correcta === 'SI'
@@ -132,16 +112,15 @@ export class ExamenesComponent implements OnInit {
     return respuestasCorrectasUsuario;
   }
 
-  descargarPreguntas() {
+  protected descargarPreguntas() {
     let html =
       '<html><head><title>Preguntas</title></head><body> <h2>Nombre y apellidos:________________________________________________</h2><h2>Fecha: _____/_____/_________';
 
-    // Añade cada pregunta y sus respuestas al HTML
     for (let i = 0; i < this.preguntas.length; i++) {
       html += `<h1>${i + 1}. ${this.preguntas[i].pregunta}</h1> `;
 
-      for (let respuesta of this.preguntas[i].respuestas) {
-        html += `<p style="font-weight: normal;">  &#9634; ${respuesta.respuesta}</p>`; //Checkbox en formato UTF-8 apta para imprimir
+      for (const respuesta of this.preguntas[i].respuestas) {
+        html += `<p style="font-weight: normal;">  &#9634; ${respuesta.respuesta}</p>`; //UTF-8 character for a checkbox to print
       }
 
       html += `<br>`;
@@ -149,14 +128,12 @@ export class ExamenesComponent implements OnInit {
 
     html += '</body></html>';
 
-    // Crea un objeto Blob con el HTML
     const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
 
-    // Usa FileSaver.js para descargar el archivo
     saveAs(blob, 'preguntas.odt');
   }
 
-  devolverpreguntas(): void {
+  protected devolverpreguntas(): void {
     this.submitted = true;
     if (this.form.valid) {
       const data = {
@@ -164,7 +141,6 @@ export class ExamenesComponent implements OnInit {
         dificultad: this.form.get('dificultad')?.value,
         limite: this.form.get('numeroPreguntas')?.value,
       };
-      console.log('Petición al servidor: ' + JSON.stringify(data));
 
       this.http
         .post<RespuestaServidor>(
@@ -173,8 +149,6 @@ export class ExamenesComponent implements OnInit {
         )
         .subscribe(
           (response) => {
-            console.log('Respuesta del servidor: ' + JSON.stringify(response));
-            console.log(response.preguntas);
             this.preguntas = response.preguntas;
           },
           (error) => {
@@ -184,21 +158,19 @@ export class ExamenesComponent implements OnInit {
     }
   }
 
-  cargarResultados() {
+  protected cargarResultados() {
     this.resultadosExamenes = [];
-    for (let key in localStorage) {
-      let resultado = localStorage.getItem(key);
+    for (const key in localStorage) {
+      const resultado = localStorage.getItem(key);
       if (resultado) {
         this.resultadosExamenes.push(JSON.parse(resultado));
       }
     }
   }
 
-  descargarRespuestas() {
-    // Crea una matriz para almacenar las respuestas
+  protected descargarRespuestas() {
     const respuestas = [];
 
-    // Añade cada pregunta y su respuesta correcta a la matriz
     for (let i = 0; i < this.preguntas.length; i++) {
       const respuestaCorrecta = this.preguntas[i].respuestas.find(
         (respuesta) => respuesta.es_correcta === 'SI'
@@ -210,14 +182,11 @@ export class ExamenesComponent implements OnInit {
       });
     }
 
-    // Usa la biblioteca xlsx para crear una hoja de trabajo de la matriz
     const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(respuestas);
 
-    // Crea un libro de trabajo y añade la hoja de trabajo
     const wb: XLSX.WorkBook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, 'Respuestas');
 
-    // Usa la biblioteca xlsx para descargar el libro de trabajo como un archivo xlsx
     XLSX.writeFile(wb, 'respuestas.xlsx');
   }
 }

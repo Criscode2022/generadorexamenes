@@ -1,12 +1,10 @@
+import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
-import { Tema } from 'src/main';
-import { Pregunta } from 'src/main';
+import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { Router } from '@angular/router';
 import { ServicioDatosService } from 'src/app/servicio-datos.service';
-import { HttpErrorResponse } from '@angular/common/http';
-import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { Pregunta, Tema } from 'src/main';
 
 @Component({
   selector: 'app-modificar-pregunta',
@@ -15,10 +13,10 @@ import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 })
 export class ModificarPreguntaComponent implements OnInit {
   temas = new FormControl();
-  ListaTemas: Tema[] = [];
-  dificultades: number[] = [1, 2, 3];
-  dificultadSeleccionadaAgregar: number = this.dificultades[0];
-  dificultadSeleccionadaModificar: number = this.dificultades[0];
+  themesList: Tema[] = [];
+  difficulties: number[] = [1, 2, 3];
+  dificultadSeleccionadaAgregar: number = this.difficulties[0];
+  dificultadSeleccionadaModificar: number = this.difficulties[0];
   enunciado: string = '';
   enunciadoModificar: string = '';
   respuesta1: string = '';
@@ -29,7 +27,7 @@ export class ModificarPreguntaComponent implements OnInit {
   respuesta2Correcta: string = 'NO';
   respuesta3Correcta: string = 'NO';
   respuesta4Correcta: string = 'NO';
-  temaSeleccionado: Tema = this.ListaTemas[0];
+  temaSeleccionado: Tema = this.themesList[0];
   idPreguntaInsertada: number | undefined = 0;
   respuestaCorrecta: number = 0;
   rutaCambiada = false;
@@ -213,7 +211,7 @@ export class ModificarPreguntaComponent implements OnInit {
     this.ServicioDatosService.temas$.subscribe(
       (data) => {
         if (data) {
-          this.ListaTemas = data;
+          this.themesList = data;
         }
       },
       (error) => {

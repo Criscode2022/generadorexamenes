@@ -5,7 +5,7 @@
 <mat-form-field appearance="fill">
   <mat-label>Temas</mat-label>
   <mat-select [formControl]="temas">
-    <mat-option *ngFor="let tema of ListaTemas" [value]="tema">{{
+    <mat-option *ngFor="let tema of themesList" [value]="tema">{{
       tema.tema
     }}</mat-option>
   </mat-select>
@@ -20,7 +20,7 @@
 >
   <mat-radio-button
     class="example-radio-button"
-    *ngFor="let dificultad of dificultades"
+    *ngFor="let dificultad of difficulties"
     [value]="dificultad"
   >
     {{ dificultad }}

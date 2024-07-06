@@ -1,9 +1,8 @@
+import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { Tema } from 'src/main';
-import { Pregunta } from 'src/main';
 import { FormControl } from '@angular/forms';
 import { ServicioDatosService } from 'src/app/servicio-datos.service';
-import { HttpClient } from '@angular/common/http';
+import { Pregunta, Tema } from 'src/main';
 
 @Component({
   selector: 'app-eliminar-pregunta',
@@ -13,10 +12,10 @@ import { HttpClient } from '@angular/common/http';
 export class EliminarPreguntaComponent implements OnInit {
   mensajeEliminar = '';
   temas = new FormControl();
-  ListaTemas: Tema[] = [];
-  dificultades: number[] = [1, 2, 3];
-  dificultadSeleccionadaAgregar: number = this.dificultades[0];
-  dificultadSeleccionadaModificar: number = this.dificultades[0];
+  themesList: Tema[] = [];
+  difficulties: number[] = [1, 2, 3];
+  dificultadSeleccionadaAgregar: number = this.difficulties[0];
+  dificultadSeleccionadaModificar: number = this.difficulties[0];
   enunciado: string = '';
   enunciadoModificar: string = '';
   respuesta1: string = '';
@@ -27,7 +26,7 @@ export class EliminarPreguntaComponent implements OnInit {
   respuesta2Correcta: string = 'NO';
   respuesta3Correcta: string = 'NO';
   respuesta4Correcta: string = 'NO';
-  temaSeleccionado: Tema = this.ListaTemas[0];
+  temaSeleccionado: Tema = this.themesList[0];
   idPreguntaInsertada: number | undefined = 0;
   respuestaCorrecta: number = 0;
   rutaCambiada = false;
@@ -91,7 +90,7 @@ export class EliminarPreguntaComponent implements OnInit {
     this.ServicioDatosService.temas$.subscribe(
       (data) => {
         if (data) {
-          this.ListaTemas = data;
+          this.themesList = data;
         }
       },
       (error) => {

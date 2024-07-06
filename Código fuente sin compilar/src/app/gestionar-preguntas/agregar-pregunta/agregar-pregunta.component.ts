@@ -1,19 +1,8 @@
-import { Component, OnInit } from '@angular/core';
-import { FormControl, Validators, FormGroup } from '@angular/forms';
-import { Tema } from 'src/main';
-import { Pregunta } from 'src/main';
-import { MatRadioGroup } from '@angular/material/radio';
-import { MatSelect } from '@angular/material/select';
 import { HttpClient } from '@angular/common/http';
-import { MatFormField } from '@angular/material/form-field';
-import { Router } from '@angular/router';
-import { Respuesta } from 'src/main';
-import { Observable, BehaviorSubject, of } from 'rxjs';
-import { RespuestaServidor } from 'src/main';
-import { saveAs } from 'file-saver';
-import { MatButtonModule } from '@angular/material/button';
-import * as XLSX from 'xlsx';
+import { Component, OnInit } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { ServicioDatosService } from 'src/app/servicio-datos.service';
+import { Pregunta, Tema } from 'src/main';
 
 @Component({
   selector: 'app-agregar-pregunta',
@@ -22,10 +11,10 @@ import { ServicioDatosService } from 'src/app/servicio-datos.service';
 })
 export class AgregarPreguntaComponent implements OnInit {
   temas = new FormControl();
-  ListaTemas: Tema[] = [];
-  dificultades: number[] = [1, 2, 3];
-  dificultadSeleccionadaAgregar: number = this.dificultades[0];
-  dificultadSeleccionadaModificar: number = this.dificultades[0];
+  themesList: Tema[] = [];
+  difficulties: number[] = [1, 2, 3];
+  dificultadSeleccionadaAgregar: number = this.difficulties[0];
+  dificultadSeleccionadaModificar: number = this.difficulties[0];
   enunciado: string = '';
   enunciadoModificar: string = '';
   respuesta1: string = '';
@@ -36,7 +25,7 @@ export class AgregarPreguntaComponent implements OnInit {
   respuesta2Correcta: string = 'NO';
   respuesta3Correcta: string = 'NO';
   respuesta4Correcta: string = 'NO';
-  temaSeleccionado: Tema = this.ListaTemas[0];
+  temaSeleccionado: Tema = this.themesList[0];
   idPreguntaInsertada: number | undefined = 0;
   respuestaCorrecta: number = 0;
   rutaCambiada = false;
@@ -98,7 +87,7 @@ export class AgregarPreguntaComponent implements OnInit {
     this.ServicioDatosService.temas$.subscribe(
       (data) => {
         if (data) {
-          this.ListaTemas = data;
+          this.themesList = data;
         }
       },
       (error) => {

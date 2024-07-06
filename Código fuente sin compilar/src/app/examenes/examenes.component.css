@@ -21,30 +21,6 @@ h2 {
   text-align: center;
 }
 
-#Download {
-  width: auto !important;
-}
-
-#menu {
-  width: auto !important;
-}
-
-#Download * {
-  width: auto !important;
-}
-
-::ng-deep .mat-mdc-menu-item {
-  width: auto !important;
-}
-
-#Download button {
-  width: auto !important;
-}
-
-#menu * {
-  width: auto !important;
-}
-
 #Download button {
   position: fixed;
   bottom: 0;
@@ -181,11 +157,11 @@ button {
   }
 
   #formulario {
-    width: 100% !important;
+    width: 100%;
   }
 
   #resultado {
-    width: 100% !important;
+    width: 100%;
   }
 }
 
