@@ -1,46 +1,33 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, inject, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { saveAs } from 'file-saver';
 import { Observable, of } from 'rxjs';
 import { Pregunta, RespuestaServidor, Tema } from 'src/main';
 import * as XLSX from 'xlsx';
 import { ServicioDatosService } from '../servicio-datos.service';
+import { QuizForm } from './quiz.form';
 
 @Component({
   selector: 'app-examenes',
   templateUrl: './examenes.component.html',
   styleUrls: ['./examenes.component.css'],
 })
-export class ExamenesComponent implements OnInit {
+export class ExamenesComponent extends QuizForm implements OnInit {
   protected difficulties = [1, 2, 3];
   protected preguntas: Pregunta[] = [];
-  protected examenGenerado: boolean = false;
-  protected respuestasUsuario: string[] = [];
+  protected examenGenerado = false;
+  protected respuestasUsuario: any[] = [];
   protected resultadosExamenes: any[] = [];
   protected respuestasCorrectas = 0;
 
   protected themesList$: Observable<Tema[]> = of([]);
 
   protected show = false;
-  protected loading: boolean = false;
+  protected loading = false;
   protected submitted = false;
 
   private http = inject(HttpClient);
   private ServicioDatosService = inject(ServicioDatosService);
-  private fb = inject(FormBuilder);
-
-  private skeleton = {
-    temas: new FormControl([], Validators.required),
-    dificultad: new FormControl('', Validators.required),
-    numeroPreguntas: new FormControl(null, [
-      Validators.required,
-      Validators.min(1),
-      Validators.max(100),
-    ]),
-  };
-
-  protected form = this.fb.group(this.skeleton);
 
   ngOnInit() {
     this.cargarResultados();
