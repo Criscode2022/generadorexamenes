@@ -31,22 +31,6 @@ h2 {
   color: red;
 }
 
-main {
-  display: flex;
-  justify-content: space-around;
-  position: relative;
-  top: 20px;
-  margin: 20pt;
-}
-
-#resultado {
-  width: 45%;
-}
-
-#formulario {
-  width: 15%;
-}
-
 h3 {
   font-weight: bold;
   margin: 20px 0;
@@ -94,28 +78,8 @@ li {
 }
 
 @media (max-width: 800px) {
-  main {
-    display: flex;
-    flex-direction: column;
-  }
-
   #comprobarEscritorio {
     display: none;
-  }
-
-  #comprobarbtnM {
-    padding-left: 10pt;
-    padding-right: 10pt;
-    padding-top: 10pt;
-    padding-bottom: 20pt;
-  }
-
-  #formulario {
-    width: 100%;
-  }
-
-  #resultado {
-    width: 100%;
   }
 }
 
