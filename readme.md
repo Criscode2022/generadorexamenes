@@ -9,18 +9,18 @@ Para los estilos CSS, utiliza los frameworks de Tailwind CSS y Angular Material 
 
 ### Front End
 
--Angular.
+- Angular.
 
--TypeScript.
+- TypeScript.
 
--Angular Material.
+- Angular Material.
 
--Tailwind CSS.
+- Tailwind CSS.
 
--SASS.
+- SASS.
 
 ### Back End
 
-Express.js
+- Express.js
 
-MySQL
+- MySQL
