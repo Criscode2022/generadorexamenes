@@ -10,12 +10,17 @@ Para los estilos CSS, utiliza los frameworks de Tailwind CSS y Angular Material 
 ### Front End
 
 -Angular.
+
 -TypeScript.
+
 -Angular Material.
+
 -Tailwind CSS.
+
 -SASS.
 
 ### Back End
 
 Express.js
+
 MySQL
