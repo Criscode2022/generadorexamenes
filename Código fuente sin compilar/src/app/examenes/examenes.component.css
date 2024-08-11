@@ -38,7 +38,8 @@ h3 {
 
 ul,
 li {
-  margin: 20px 0;
+  margin: 20px;
+  list-style: disc;
 }
 
 .botonDescargar {

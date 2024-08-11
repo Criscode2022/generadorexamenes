@@ -37,7 +37,7 @@
         </div>
       </ng-template>
 
-      <ul *ngIf="form.get('temas')?.value">
+      <ul *ngIf="form.get('temas')?.value?.length! > 0">
         <strong>Temas seleccionados</strong>
         <li *ngFor="let tema of form.get('temas')?.value">
           <strong>{{ tema }}</strong>
@@ -159,12 +159,22 @@
 
     <ol>
       <li *ngFor="let resultado of resultadosExamenes">
-        Aciertos: {{ resultado.respuestasCorrectas }} - Preguntas:
-        {{ resultado.totalPreguntas }} - Puntuacion:
-        {{
-          (resultado.respuestasCorrectas / resultado.totalPreguntas) * 10
-            | number : "1.2-2"
-        }}
+        Preguntas: {{ resultado.totalPreguntas }} || Aciertos:
+        {{ resultado.respuestasCorrectas }} || Puntuacion:
+        <strong
+          [ngStyle]="{
+            color:
+              (resultado.respuestasCorrectas / resultado.totalPreguntas) * 10 <
+              5
+                ? 'red'
+                : 'green'
+          }"
+        >
+          {{
+            (resultado.respuestasCorrectas / resultado.totalPreguntas) * 10
+              | number : "1.2-2"
+          }}
+        </strong>
       </li>
     </ol>
   </section>
