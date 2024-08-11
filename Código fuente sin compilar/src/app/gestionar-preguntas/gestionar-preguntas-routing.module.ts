@@ -1,9 +1,9 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AgregarPreguntaComponent } from './agregar-pregunta/agregar-pregunta.component';
-import { ModificarPreguntaComponent } from './modificar-pregunta/modificar-pregunta.component';
 import { EliminarPreguntaComponent } from './eliminar-pregunta/eliminar-pregunta.component';
 import { GestionarPreguntasComponent } from './gestionar-preguntas.component';
+import { ModificarPreguntaComponent } from './modificar-pregunta/modificar-pregunta.component';
 
 const routes: Routes = [
   {
