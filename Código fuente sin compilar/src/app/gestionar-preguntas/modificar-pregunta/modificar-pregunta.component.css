@@ -1,5 +1,4 @@
 body {
-
   margin: auto;
   position: absolute;
   left: 40pt;
@@ -7,7 +6,6 @@ body {
 }
 
 #respuestasEnun {
-
   display: flex;
   gap: 30pt;
 }
@@ -16,7 +14,6 @@ h2 {
   font-weight: bold;
   margin-top: 20pt;
   margin-bottom: 20pt;
-
 }
 
 h3 {
@@ -24,26 +21,17 @@ h3 {
   font-weight: bold;
   margin-top: 20pt;
   margin-bottom: 20pt;
-
 }
 
-#nota {
-
-  color: rgb(168, 0, 0);
-}
-
-#preguntaseliminar, #preguntasmodificar {
-
+#preguntaseliminar,
+#preguntasmodificar {
   border: solid black 1px;
   width: 80%;
   padding: 10pt;
   border-radius: 5pt;
   background-color: white;
-
 }
 
 .resultado {
-
   color: darkblue;
 }
-

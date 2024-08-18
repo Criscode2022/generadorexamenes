@@ -32,11 +32,11 @@ app-header {
   box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.75) !important;
 }
 
-.cdk-overlay-pane.mat-mdc-menu-panel {
-  width: auto !important;
+mat-form-field {
+  width: 100%;
 }
 
-#mi-menu-unico .cdk-overlay-pane.mat-mdc-menu-panel {
+.cdk-overlay-pane.mat-mdc-menu-panel {
   width: auto !important;
 }
 

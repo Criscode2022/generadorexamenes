@@ -24,7 +24,7 @@ export class ExamenesComponent extends QuizForm implements OnInit {
 
   protected show = false;
   protected loading = false;
-  protected submitted = false;
+  protected completed = false;
 
   private http = inject(HttpClient);
   private ServicioDatosService = inject(ServicioDatosService);
@@ -34,7 +34,7 @@ export class ExamenesComponent extends QuizForm implements OnInit {
     this.themesList$ = this.ServicioDatosService.temas$;
   }
 
-  protected contarRespuestasCorrectasEscritorio() {
+  protected contarRespuestasCorrectas() {
     let respuestasCorrectasUsuario = 0;
 
     for (let i = 0; i < this.preguntas.length; i++) {
@@ -61,40 +61,14 @@ export class ExamenesComponent extends QuizForm implements OnInit {
     localStorage.setItem(id, JSON.stringify(resultado));
     this.cargarResultados();
 
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth',
-    });
-
-    return respuestasCorrectasUsuario;
-  }
-
-  protected contarRespuestasCorrectasMobile() {
-    let respuestasCorrectasUsuario = 0;
-
-    for (let i = 0; i < this.preguntas.length; i++) {
-      let pregunta = this.preguntas[i];
-      const respuestaUsuario = this.respuestasUsuario[i];
-
-      for (const respuesta of pregunta.respuestas) {
-        if (
-          respuesta.respuesta === respuestaUsuario &&
-          respuesta.es_correcta === 'SI'
-        ) {
-          respuestasCorrectasUsuario++;
-        }
-      }
+    if (window.innerWidth > 768) {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth',
+      });
     }
 
-    const resultado = {
-      respuestasCorrectas: respuestasCorrectasUsuario,
-      totalPreguntas: this.preguntas.length,
-    };
-    this.respuestasCorrectas = respuestasCorrectasUsuario;
-
-    const id = new Date().getTime().toString();
-    localStorage.setItem(id, JSON.stringify(resultado));
-    this.cargarResultados();
+    this.completed = true;
 
     return respuestasCorrectasUsuario;
   }
@@ -121,28 +95,29 @@ export class ExamenesComponent extends QuizForm implements OnInit {
   }
 
   protected devolverpreguntas(): void {
-    this.submitted = true;
-    if (this.form.valid) {
-      const data = {
-        nombresTemas: this.form.get('temas')?.value,
-        dificultad: this.form.get('dificultad')?.value,
-        limite: this.form.get('numeroPreguntas')?.value,
-      };
-
-      this.http
-        .post<RespuestaServidor>(
-          'https://api-examenes.onrender.com/examen',
-          data
-        )
-        .subscribe(
-          (response) => {
-            this.preguntas = response.preguntas;
-          },
-          (error) => {
-            console.error(error);
-          }
-        );
+    if (!this.form.valid) {
+      return;
     }
+
+    this.completed = false;
+    this.examenGenerado = true;
+
+    const data = {
+      nombresTemas: this.form.get('temas')?.value,
+      dificultad: this.form.get('dificultad')?.value,
+      limite: this.form.get('numeroPreguntas')?.value,
+    };
+
+    this.http
+      .post<RespuestaServidor>('https://api-examenes.onrender.com/examen', data)
+      .subscribe(
+        (response) => {
+          this.preguntas = response.preguntas;
+        },
+        (error) => {
+          console.error(error);
+        }
+      );
   }
 
   protected cargarResultados() {
@@ -175,5 +150,10 @@ export class ExamenesComponent extends QuizForm implements OnInit {
     XLSX.utils.book_append_sheet(wb, ws, 'Respuestas');
 
     XLSX.writeFile(wb, 'respuestas.xlsx');
+  }
+
+  protected cleanHistory() {
+    localStorage.clear();
+    window.location.reload();
   }
 }

@@ -1,14 +1,10 @@
-.comprobarbtn {
+.checkBtn {
   background-color: yellow;
   text-align: center;
   display: block;
   color: black;
   margin: auto;
   margin-bottom: 20pt;
-}
-
-mat-form-field {
-  width: 100%;
 }
 
 #Download button {
@@ -66,17 +62,5 @@ li {
   mat-radio-group {
     display: flex;
     flex-direction: column;
-  }
-}
-
-@media (max-width: 800px) {
-  #comprobarEscritorio {
-    display: none;
-  }
-}
-
-@media (min-width: 426px) {
-  #comprobarMobile {
-    display: none;
   }
 }

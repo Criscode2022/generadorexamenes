@@ -3,9 +3,7 @@
     <h2 class="text-center">Configura tu examen</h2>
     <form
       [formGroup]="form"
-      (ngSubmit)="
-        devolverpreguntas(); this.examenGenerado = true; this.show = false
-      "
+      (ngSubmit)="devolverpreguntas(); this.show = false"
     >
       <h3>Temas</h3>
       <ng-container *ngIf="themesList$ | async as lt; else loading">
@@ -18,9 +16,7 @@
             }}</mat-option>
           </mat-select>
 
-          <mat-error
-            *ngIf="form.get('temas')?.errors?.['required'] && submitted"
-          >
+          <mat-error *ngIf="form.get('temas')?.errors?.['required']">
             Este campo es obligatorio
           </mat-error>
         </mat-form-field>
@@ -66,9 +62,7 @@
           max="100"
         />
 
-        <mat-error
-          *ngIf="form.get('numeroPreguntas')?.errors?.['required'] && submitted"
-        >
+        <mat-error *ngIf="form.get('numeroPreguntas')?.errors?.['required']">
           Este campo es obligatorio
         </mat-error>
       </mat-form-field>
@@ -81,7 +75,7 @@
     </form>
   </section>
 
-  <section aria-label="examen" *ngIf="examenGenerado">
+  <section *ngIf="examenGenerado">
     <div>
       <h2 class="text-center">Tu examen</h2>
       <div class="grid-container">
@@ -114,32 +108,18 @@
       </div>
     </div>
 
-    <p id="comprobarEscritorio">
-      <button
-        class="comprobarbtn"
-        id="comprobarbtnD"
-        mat-raised-button
-        color="primary"
-        (click)="contarRespuestasCorrectasEscritorio(); show = true"
-      >
-        Comprobar respuestas
-      </button>
-    </p>
-
-    <p id="comprobarMobile">
-      <button
-        class="comprobarbtn"
-        id="comprobarbtnD"
-        mat-raised-button
-        color="primary"
-        (click)="contarRespuestasCorrectasMobile(); show = true"
-      >
-        Comprobar respuestas
-      </button>
-    </p>
+    <button
+      *ngIf="!completed"
+      class="checkBtn"
+      mat-raised-button
+      color="primary"
+      (click)="contarRespuestasCorrectas()"
+    >
+      Comprobar respuestas
+    </button>
   </section>
 
-  <section aria-label="puntuación">
+  <section>
     <div id="actual" *ngIf="show">
       <h2 class="text-center">Puntuación de este examen</h2>
       <h4>
@@ -149,34 +129,46 @@
 
     <h2 class="text-center">Historial de examenes</h2>
 
-    <ol>
-      <li *ngFor="let resultado of resultadosExamenes">
-        Preguntas: {{ resultado.totalPreguntas }} || Aciertos:
-        {{ resultado.respuestasCorrectas }} || Puntuacion:
-        <strong
-          [ngStyle]="{
-            color:
-              (resultado.respuestasCorrectas / resultado.totalPreguntas) * 10 <
-              5
-                ? 'red'
-                : 'green'
-          }"
+    <ng-container *ngIf="resultadosExamenes.length; else noResults">
+      <ol class="relative">
+        <li *ngFor="let resultado of resultadosExamenes">
+          Preguntas: {{ resultado.totalPreguntas }} || Aciertos:
+          {{ resultado.respuestasCorrectas }} || Puntuacion sobre 10:
+          <strong
+            [ngStyle]="{
+              color:
+                (resultado.respuestasCorrectas / resultado.totalPreguntas) *
+                  10 <
+                5
+                  ? 'red'
+                  : 'green'
+            }"
+          >
+            {{
+              (resultado.respuestasCorrectas / resultado.totalPreguntas) * 10
+                | number : "1.2-2"
+            }}
+          </strong>
+        </li>
+
+        <button
+          class="absolute bottom left-20"
+          color="primary"
+          mat-raised-button
+          (click)="cleanHistory()"
         >
-          {{
-            (resultado.respuestasCorrectas / resultado.totalPreguntas) * 10
-              | number : "1.2-2"
-          }}
-        </strong>
-      </li>
-    </ol>
+          Borrar historial
+        </button>
+      </ol>
+    </ng-container>
   </section>
 </main>
 
 <div *ngIf="this.form.valid && examenGenerado" id="Download">
-  <button mat-icon-button [matMenuTriggerFor]="menu" id="mi-menu-unico">
+  <button mat-icon-button [matMenuTriggerFor]="menu">
     <mat-icon>save_alt</mat-icon>
   </button>
-  <mat-menu #menu="matMenu" id="menu">
+  <mat-menu #menu="matMenu">
     <button mat-menu-item (click)="descargarRespuestas()">
       <span class="btn">Descargar hoja de respuestas</span>
     </button>
@@ -185,3 +177,9 @@
     </button>
   </mat-menu>
 </div>
+
+<ng-template #noResults>
+  <p class="bg-white p-8 rounded shadow">
+    Aquí verás los resultados de tus exámenes completados
+  </p>
+</ng-template>
