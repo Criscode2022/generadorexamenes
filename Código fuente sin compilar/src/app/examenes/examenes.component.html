@@ -1,6 +1,6 @@
 <main class="flex flex-col md:flex-row justify-around mx-4 md:mx-0 mt-4">
   <section id="formulario">
-    <h2>Configura tu examen</h2>
+    <h2 class="text-center">Configura tu examen</h2>
     <form
       [formGroup]="form"
       (ngSubmit)="
@@ -9,7 +9,7 @@
     >
       <h3>Temas</h3>
       <ng-container *ngIf="themesList$ | async as lt; else loading">
-        <mat-form-field appearance="fill">
+        <mat-form-field>
           <mat-label>Temas</mat-label>
 
           <mat-select formControlName="temas" multiple>
@@ -29,7 +29,7 @@
       <ng-template #loading>
         <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
 
-        <div class="note">
+        <div class="text-red-700 pt-8">
           <strong
             >Nota: la carga inicial puede tardar hasta un minuto mientras se
             enciende el servidor</strong
@@ -45,13 +45,8 @@
       </ul>
 
       <h3>Dificultad</h3>
-      <mat-radio-group
-        aria-labelledby="example-radio-group-label"
-        class="example-radio-group"
-        formControlName="dificultad"
-      >
+      <mat-radio-group formControlName="dificultad">
         <mat-radio-button
-          class="example-radio-button"
           *ngFor="let dificultad of difficulties"
           [value]="dificultad"
         >
@@ -60,14 +55,14 @@
       </mat-radio-group>
 
       <h3>Número de preguntas</h3>
-      <mat-form-field class="example-full-width">
+      <mat-form-field>
         <mat-label>Preguntas</mat-label>
         <input
           formControlName="numeroPreguntas"
           matInput
           placeholder="Máximo 100 preguntas"
           type="number"
-          min="0"
+          min="1"
           max="100"
         />
 
@@ -86,9 +81,9 @@
     </form>
   </section>
 
-  <section id="resultado" *ngIf="examenGenerado">
+  <section aria-label="examen" *ngIf="examenGenerado">
     <div>
-      <h2>Tu examen</h2>
+      <h2 class="text-center">Tu examen</h2>
       <div class="grid-container">
         <div *ngFor="let pregunta of preguntas; let i = index">
           <p>
@@ -101,10 +96,7 @@
           >
             <div *ngFor="let respuesta of pregunta.respuestas">
               <p>
-                <mat-radio-button
-                  class="example-margin"
-                  [value]="respuesta.respuesta"
-                >
+                <mat-radio-button [value]="respuesta.respuesta">
                   {{ respuesta.respuesta }}
                   <span
                     *ngIf="show"
@@ -147,15 +139,15 @@
     </p>
   </section>
 
-  <section id="puntuacion">
+  <section aria-label="puntuación">
     <div id="actual" *ngIf="show">
-      <h2>Puntuación de este examen</h2>
+      <h2 class="text-center">Puntuación de este examen</h2>
       <h4>
         Respuestas correctas: {{ respuestasCorrectas }}/{{ preguntas.length }}
       </h4>
     </div>
 
-    <h2>Historial de examenes</h2>
+    <h2 class="text-center">Historial de examenes</h2>
 
     <ol>
       <li *ngFor="let resultado of resultadosExamenes">
@@ -181,12 +173,7 @@
 </main>
 
 <div *ngIf="this.form.valid && examenGenerado" id="Download">
-  <button
-    mat-icon-button
-    [matMenuTriggerFor]="menu"
-    aria-label="Example icon-button with a menu"
-    id="mi-menu-unico"
-  >
+  <button mat-icon-button [matMenuTriggerFor]="menu" id="mi-menu-unico">
     <mat-icon>save_alt</mat-icon>
   </button>
   <mat-menu #menu="matMenu" id="menu">

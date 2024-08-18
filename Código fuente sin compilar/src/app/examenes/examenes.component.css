@@ -11,10 +11,6 @@ mat-form-field {
   width: 100%;
 }
 
-h2 {
-  text-align: center;
-}
-
 #Download button {
   position: fixed;
   bottom: 0;
@@ -24,11 +20,6 @@ h2 {
   overflow: hidden;
   color: white;
   box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.75);
-}
-
-.note {
-  padding-top: 30px;
-  color: red;
 }
 
 h3 {

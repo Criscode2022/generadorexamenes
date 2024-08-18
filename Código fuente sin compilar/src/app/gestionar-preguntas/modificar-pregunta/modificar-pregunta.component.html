@@ -36,13 +36,10 @@
 
 <h3>Selecciona la dificultad</h3>
 <mat-radio-group
-  aria-labelledby="example-radio-group-label"
-  class="example-radio-group"
   [(ngModel)]="dificultadSeleccionadaModificar"
   name="dificultadSeleccionadaModificar"
 >
   <mat-radio-button
-    class="example-radio-button"
     *ngFor="let dificultad of difficulties"
     [value]="dificultad"
   >
@@ -56,7 +53,7 @@
 </div>
 
 <h3>Introduce la pregunta</h3>
-<mat-form-field class="example-full-width">
+<mat-form-field>
   <mat-label>Enunciado Pregunta</mat-label>
   <input
     [(ngModel)]="enunciadoModificar"
@@ -72,11 +69,8 @@
   <h3>Introduce las respuestas y marca la correcta</h3>
 
   <div class="respuesta">
-    <mat-radio-button
-      class="example-radio-button"
-      (click)="setRespuestaCorrecta('1')"
-    ></mat-radio-button>
-    <mat-form-field class="example-full-width">
+    <mat-radio-button (click)="setRespuestaCorrecta('1')"></mat-radio-button>
+    <mat-form-field>
       <mat-label>Respuesta 1</mat-label>
       <input
         [(ngModel)]="respuesta1"
@@ -90,11 +84,8 @@
   </div>
 
   <div class="respuesta">
-    <mat-radio-button
-      class="example-radio-button"
-      (click)="setRespuestaCorrecta('2')"
-    ></mat-radio-button>
-    <mat-form-field class="example-full-width">
+    <mat-radio-button (click)="setRespuestaCorrecta('2')"></mat-radio-button>
+    <mat-form-field>
       <mat-label>Respuesta 2</mat-label>
       <input
         [(ngModel)]="respuesta2"
@@ -108,11 +99,8 @@
   </div>
 
   <div class="respuesta">
-    <mat-radio-button
-      class="example-radio-button"
-      (click)="setRespuestaCorrecta('3')"
-    ></mat-radio-button>
-    <mat-form-field class="example-full-width">
+    <mat-radio-button (click)="setRespuestaCorrecta('3')"></mat-radio-button>
+    <mat-form-field>
       <mat-label>Respuesta 3</mat-label>
       <input
         [(ngModel)]="respuesta3"
@@ -127,11 +115,8 @@
 </div>
 
 <div class="respuesta">
-  <mat-radio-button
-    class="example-radio-button"
-    (click)="setRespuestaCorrecta('4')"
-  ></mat-radio-button>
-  <mat-form-field class="example-full-width">
+  <mat-radio-button (click)="setRespuestaCorrecta('4')"></mat-radio-button>
+  <mat-form-field>
     <mat-label>Respuesta 4</mat-label>
     <input
       [(ngModel)]="respuesta4"
