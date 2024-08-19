@@ -5,11 +5,6 @@ body {
   top: 140pt;
 }
 
-#respuestasEnun {
-  display: flex;
-  gap: 30pt;
-}
-
 mat-button-toggle {
   width: 80%;
 }
@@ -34,10 +29,6 @@ h3 {
   padding: 10pt;
   border-radius: 5pt;
   background-color: white;
-}
-
-.resultado {
-  color: darkblue;
 }
 
 @media (min-width: 426px) {

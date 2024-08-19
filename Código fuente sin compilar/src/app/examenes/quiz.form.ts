@@ -5,14 +5,25 @@ export class QuizForm {
   private fb = inject(FormBuilder);
 
   private skeleton = {
-    temas: new FormControl([], Validators.required),
-    dificultad: new FormControl('', Validators.required),
-    numeroPreguntas: new FormControl(null, [
-      Validators.required,
-      Validators.min(1),
-      Validators.max(100),
-    ]),
+    temas: [[], Validators.required],
+    dificultad: ['', Validators.required],
+    numeroPreguntas: [
+      null,
+      [Validators.required, Validators.min(1), Validators.max(100)],
+    ],
   };
 
   protected form = this.fb.group(this.skeleton);
+
+  get dificultad() {
+    return this.form.get('dificultad');
+  }
+
+  get numeroPreguntas() {
+    return this.form.get('numeroPreguntas');
+  }
+
+  get temas() {
+    return this.form.get('temas') as FormControl;
+  }
 }

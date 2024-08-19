@@ -69,6 +69,7 @@ export class ExamenesComponent extends QuizForm implements OnInit {
     }
 
     this.completed = true;
+    this.show = true;
 
     return respuestasCorrectasUsuario;
   }
@@ -99,6 +100,7 @@ export class ExamenesComponent extends QuizForm implements OnInit {
       return;
     }
 
+    this.show = false;
     this.completed = false;
     this.examenGenerado = true;
 

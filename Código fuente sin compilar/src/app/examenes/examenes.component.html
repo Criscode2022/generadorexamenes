@@ -1,11 +1,8 @@
 <main class="flex flex-col md:flex-row justify-around mx-4 md:mx-0 mt-4">
   <section id="formulario">
     <h2 class="text-center">Configura tu examen</h2>
-    <form
-      [formGroup]="form"
-      (ngSubmit)="devolverpreguntas(); this.show = false"
-    >
-      <h3>Temas</h3>
+    <form [formGroup]="form" (ngSubmit)="devolverpreguntas()">
+      <h3 class="font-bold my-5">Temas</h3>
       <ng-container *ngIf="themesList$ | async as lt; else loading">
         <mat-form-field>
           <mat-label>Temas</mat-label>
@@ -16,7 +13,7 @@
             }}</mat-option>
           </mat-select>
 
-          <mat-error *ngIf="form.get('temas')?.errors?.['required']">
+          <mat-error *ngIf="temas.errors?.['required']">
             Este campo es obligatorio
           </mat-error>
         </mat-form-field>
@@ -33,14 +30,14 @@
         </div>
       </ng-template>
 
-      <ul *ngIf="form.get('temas')?.value?.length! > 0">
+      <ul *ngIf="temas.value?.length">
         <strong>Temas seleccionados</strong>
-        <li *ngFor="let tema of form.get('temas')?.value">
+        <li *ngFor="let tema of temas.value">
           <strong>{{ tema }}</strong>
         </li>
       </ul>
 
-      <h3>Dificultad</h3>
+      <h3 class="font-bold my-5">Dificultad</h3>
       <mat-radio-group formControlName="dificultad">
         <mat-radio-button
           *ngFor="let dificultad of difficulties"
@@ -50,7 +47,7 @@
         </mat-radio-button>
       </mat-radio-group>
 
-      <h3>Número de preguntas</h3>
+      <h3 class="font-bold my-5">Número de preguntas</h3>
       <mat-form-field>
         <mat-label>Preguntas</mat-label>
         <input
@@ -62,16 +59,19 @@
           max="100"
         />
 
-        <mat-error *ngIf="form.get('numeroPreguntas')?.errors?.['required']">
+        <mat-error *ngIf="numeroPreguntas?.errors?.['required']">
           Este campo es obligatorio
         </mat-error>
       </mat-form-field>
 
-      <p>
-        <button mat-raised-button color="primary" type="submit">
-          Generar examen
-        </button>
-      </p>
+      <button
+        mat-raised-button
+        color="primary"
+        type="submit"
+        class="w-full mt-2 mb-6"
+      >
+        Generar examen
+      </button>
     </form>
   </section>
 
@@ -91,7 +91,9 @@
             <div *ngFor="let respuesta of pregunta.respuestas">
               <p>
                 <mat-radio-button [value]="respuesta.respuesta">
-                  {{ respuesta.respuesta }}
+                  <span class="cursor-pointer hover:text-blue-800">{{
+                    respuesta.respuesta
+                  }}</span>
                   <span
                     *ngIf="show"
                     [ngStyle]="{
