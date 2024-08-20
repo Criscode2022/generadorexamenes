@@ -1,14 +1,14 @@
 <main class="flex flex-col md:flex-row justify-around mx-4 md:mx-0 mt-4">
-  <section id="formulario">
+  <section>
     <h2 class="text-center">Configura tu examen</h2>
     <form [formGroup]="form" (ngSubmit)="devolverpreguntas()">
       <h3 class="font-bold my-5">Temas</h3>
-      <ng-container *ngIf="themesList$ | async as lt; else loading">
+      <ng-container *ngIf="themesList; else loading">
         <mat-form-field>
           <mat-label>Temas</mat-label>
 
           <mat-select formControlName="temas" multiple>
-            <mat-option *ngFor="let tema of lt" [value]="tema.tema">{{
+            <mat-option *ngFor="let tema of themesList" [value]="tema.tema">{{
               tema.tema
             }}</mat-option>
           </mat-select>
@@ -18,17 +18,6 @@
           </mat-error>
         </mat-form-field>
       </ng-container>
-
-      <ng-template #loading>
-        <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
-
-        <div class="text-red-700 pt-8">
-          <strong
-            >Nota: la carga inicial puede tardar hasta un minuto mientras se
-            enciende el servidor</strong
-          >
-        </div>
-      </ng-template>
 
       <ul *ngIf="temas.value?.length">
         <strong>Temas seleccionados</strong>
@@ -46,6 +35,9 @@
           {{ dificultad }}
         </mat-radio-button>
       </mat-radio-group>
+      <mat-error *ngIf="dificultad?.errors?.['required'] && submitted">
+        Este campo es obligatorio
+      </mat-error>
 
       <h3 class="font-bold my-5">Número de preguntas</h3>
       <mat-form-field>
@@ -91,17 +83,12 @@
             <div *ngFor="let respuesta of pregunta.respuestas">
               <p>
                 <mat-radio-button [value]="respuesta.respuesta">
-                  <span class="cursor-pointer hover:text-blue-800">{{
-                    respuesta.respuesta
-                  }}</span>
                   <span
-                    *ngIf="show"
-                    [ngStyle]="{
-                      color: respuesta.es_correcta === 'SI' ? 'green' : 'red'
-                    }"
+                    class="cursor-pointer hover:text-blue-800"
+                    [class.failed]="respuesta.es_correcta === 'NO' && show"
+                    [class.passed]="respuesta.es_correcta === 'SI' && show"
+                    >{{ respuesta.respuesta }}</span
                   >
-                    - {{ respuesta.es_correcta }}
-                  </span>
                 </mat-radio-button>
               </p>
             </div>
@@ -132,20 +119,12 @@
     <h2 class="text-center">Historial de examenes</h2>
 
     <ng-container *ngIf="resultadosExamenes.length; else noResults">
-      <ol class="relative">
+      <ol class="relative flex flex-col align-middle">
         <li *ngFor="let resultado of resultadosExamenes">
-          Preguntas: {{ resultado.totalPreguntas }} || Aciertos:
-          {{ resultado.respuestasCorrectas }} || Puntuacion sobre 10:
-          <strong
-            [ngStyle]="{
-              color:
-                (resultado.respuestasCorrectas / resultado.totalPreguntas) *
-                  10 <
-                5
-                  ? 'red'
-                  : 'green'
-            }"
-          >
+          Preguntas: {{ resultado.totalPreguntas }}
+          <strong>||</strong> Aciertos: {{ resultado.respuestasCorrectas }}
+          <strong>||</strong> Puntuacion sobre 10:
+          <strong class="text-red-600" [class.passed]="resultado.passed">
             {{
               (resultado.respuestasCorrectas / resultado.totalPreguntas) * 10
                 | number : "1.2-2"
@@ -154,8 +133,8 @@
         </li>
 
         <button
-          class="absolute bottom left-20"
-          color="primary"
+          color="warn"
+          class="w-1/2 mx-auto mt-4"
           mat-raised-button
           (click)="cleanHistory()"
         >
@@ -184,4 +163,8 @@
   <p class="bg-white p-8 rounded shadow">
     Aquí verás los resultados de tus exámenes completados
   </p>
+</ng-template>
+
+<ng-template #loading>
+  <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
 </ng-template>

@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, inject, OnInit } from '@angular/core';
 import { saveAs } from 'file-saver';
-import { Observable, of } from 'rxjs';
+import { catchError, delay, of, retryWhen } from 'rxjs';
 import { Pregunta, RespuestaServidor, Tema } from 'src/main';
 import * as XLSX from 'xlsx';
 import { ServicioDatosService } from '../servicio-datos.service';
@@ -20,18 +20,33 @@ export class ExamenesComponent extends QuizForm implements OnInit {
   protected resultadosExamenes: any[] = [];
   protected respuestasCorrectas = 0;
 
-  protected themesList$: Observable<Tema[]> = of([]);
+  protected themesList = [] as Tema[];
 
   protected show = false;
   protected loading = false;
   protected completed = false;
+  protected submitted = false;
 
   private http = inject(HttpClient);
-  private ServicioDatosService = inject(ServicioDatosService);
+  private servicioDatosService = inject(ServicioDatosService);
 
   ngOnInit() {
     this.cargarResultados();
-    this.themesList$ = this.ServicioDatosService.temas$;
+    this.loadThemesWithRetry();
+  }
+
+  private loadThemesWithRetry() {
+    this.servicioDatosService.temas$
+      .pipe(
+        retryWhen((errors) => errors.pipe(delay(5000))),
+        catchError((error) => {
+          console.error('Failed to load themes after several retries', error);
+          return of([]);
+        })
+      )
+      .subscribe((temas) => {
+        this.themesList = temas;
+      });
   }
 
   protected contarRespuestasCorrectas() {
@@ -54,7 +69,9 @@ export class ExamenesComponent extends QuizForm implements OnInit {
     const resultado = {
       respuestasCorrectas: respuestasCorrectasUsuario,
       totalPreguntas: this.preguntas.length,
+      passed: respuestasCorrectasUsuario >= this.preguntas.length / 2,
     };
+
     this.respuestasCorrectas = respuestasCorrectasUsuario;
 
     const id = new Date().getTime().toString();
@@ -97,6 +114,7 @@ export class ExamenesComponent extends QuizForm implements OnInit {
 
   protected devolverpreguntas(): void {
     if (!this.form.valid) {
+      this.submitted = true;
       return;
     }
 

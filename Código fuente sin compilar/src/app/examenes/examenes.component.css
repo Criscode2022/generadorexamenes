@@ -53,6 +53,14 @@ li {
   margin-bottom: 20pt;
 }
 
+.passed {
+  color: green !important;
+}
+
+.failed {
+  color: red !important;
+}
+
 @media (max-width: 835px) {
   mat-radio-group {
     display: flex;
