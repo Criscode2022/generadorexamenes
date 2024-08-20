@@ -1,20 +1,15 @@
 <body>
-  <mat-button-toggle-group name="gestion" aria-label="Font Style">
-    <mat-button-toggle
-      [routerLink]="['/gestionar', { outlets: { gestionar: ['agregar'] } }]"
+  <mat-button-toggle-group class="flex flex-col mr-8 md:mr-0 md:flex-row">
+    <mat-button-toggle [routerLink]="'agregar'"
       >Agregar pregunta</mat-button-toggle
     >
-
-    <mat-button-toggle
-      [routerLink]="['/gestionar', { outlets: { gestionar: ['modificar'] } }]"
+    <mat-button-toggle [routerLink]="'modificar'"
       >Modificar pregunta</mat-button-toggle
     >
-
-    <mat-button-toggle
-      [routerLink]="['/gestionar', { outlets: { gestionar: ['eliminar'] } }]"
+    <mat-button-toggle [routerLink]="'eliminar'"
       >Eliminar pregunta</mat-button-toggle
     >
   </mat-button-toggle-group>
 
-  <router-outlet name="gestionar"></router-outlet>
+  <router-outlet></router-outlet>
 </body>

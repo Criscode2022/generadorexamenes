@@ -18,10 +18,14 @@
   box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.75);
 }
 
-ul,
-li {
+ul li {
   margin: 20px;
   list-style: disc;
+}
+
+ol li {
+  margin: 10px;
+  list-style: decimal;
 }
 
 .botonDescargar {
@@ -55,6 +59,7 @@ li {
 
 .passed {
   color: green !important;
+  font-weight: bold;
 }
 
 .failed {

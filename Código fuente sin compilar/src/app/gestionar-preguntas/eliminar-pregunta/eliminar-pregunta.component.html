@@ -1,9 +1,6 @@
 <h2>Eliminar pregunta</h2>
 
-<h3>
-  Busca el ID de la pregunta que deseas eliminar e introdúcelo en la caja de
-  texto
-</h3>
+<h3>Busca el ID de la pregunta que deseas eliminar</h3>
 <mat-autocomplete #auto="matAutocomplete">
   <mat-option *ngFor="let pregunta of preguntasFiltradas" [value]="pregunta">
     {{ pregunta.pregunta }}
@@ -21,18 +18,20 @@
     (input)="filtrarPreguntas(preguntaSeleccionadaEliminar.value)"
   />
 </mat-form-field>
-<h3>
-  ID de la pregunta seleccionada:
-  {{ preguntaSeleccionadaEliminar.value?.id_pregunta }}
-</h3>
+
+<p *ngIf="preguntaSeleccionadaEliminar.value?.id_pregunta">
+  ID: {{ preguntaSeleccionadaEliminar.value?.id_pregunta }}
+</p>
+
+<h3>Confirma el ID de la pregunta:</h3>
 
 <mat-form-field>
-  <mat-label>ID Pregunta</mat-label>
+  <mat-label>Confirmar ID</mat-label>
   <input
     [(ngModel)]="idPregunta"
     name="pregunta"
     matInput
-    placeholder="ID Pregunta 1"
+    placeholder="Confirmar ID"
     type="text"
     maxlength="255"
   />

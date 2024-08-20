@@ -47,19 +47,14 @@
   </mat-radio-button>
 </mat-radio-group>
 
-<div>
-  La dificultad seleccionada es:
-  <strong>{{ dificultadSeleccionadaModificar }}</strong>
-</div>
-
 <h3>Introduce la pregunta</h3>
 <mat-form-field>
-  <mat-label>Enunciado Pregunta</mat-label>
+  <mat-label>Enunciado</mat-label>
   <input
     [(ngModel)]="enunciadoModificar"
     name="enunciadoModificar"
     matInput
-    placeholder="Enunciado Pregunta"
+    placeholder="Enunciado"
     type="text"
     maxlength="255"
   />
@@ -134,7 +129,4 @@
 </button>
 
 <h3 class="text-blue-800">{{ mensajeModificar }}</h3>
-<h3 class="text-blue-800">
-  [innerHTML]="mensajeModificarRespuestas">
-  {{ mensajeModificarRespuestas }}
-</h3>
+<h3 class="text-blue-800">{{ mensajeModificarRespuestas }}</h3>

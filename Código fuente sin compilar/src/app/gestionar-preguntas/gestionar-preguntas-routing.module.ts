@@ -13,17 +13,14 @@ const routes: Routes = [
       {
         path: 'eliminar',
         component: EliminarPreguntaComponent,
-        outlet: 'gestionar',
       },
       {
         path: 'modificar',
         component: ModificarPreguntaComponent,
-        outlet: 'gestionar',
       },
       {
         path: 'agregar',
         component: AgregarPreguntaComponent,
-        outlet: 'gestionar',
       },
     ],
   },

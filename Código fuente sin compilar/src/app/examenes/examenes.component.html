@@ -35,13 +35,16 @@
           {{ dificultad }}
         </mat-radio-button>
       </mat-radio-group>
-      <mat-error *ngIf="dificultad?.errors?.['required'] && submitted">
+      <mat-error
+        class="ml-3 text-xs"
+        *ngIf="dificultad?.errors?.['required'] && submitted"
+      >
         Este campo es obligatorio
       </mat-error>
 
       <h3 class="font-bold my-5">Número de preguntas</h3>
       <mat-form-field>
-        <mat-label>Preguntas</mat-label>
+        <mat-label>Nº Preguntas</mat-label>
         <input
           formControlName="numeroPreguntas"
           matInput
@@ -121,10 +124,14 @@
     <ng-container *ngIf="resultadosExamenes.length; else noResults">
       <ol class="relative flex flex-col align-middle">
         <li *ngFor="let resultado of resultadosExamenes">
-          Preguntas: {{ resultado.totalPreguntas }}
-          <strong>||</strong> Aciertos: {{ resultado.respuestasCorrectas }}
-          <strong>||</strong> Puntuacion sobre 10:
-          <strong class="text-red-600" [class.passed]="resultado.passed">
+          Preguntas: <strong>{{ resultado.totalPreguntas }}</strong> ||
+          Aciertos:
+          <strong>{{ resultado.respuestasCorrectas }}</strong>
+          || Puntuacion sobre 10:
+          <strong
+            [class.failed]="!resultado.passed"
+            [class.passed]="resultado.passed"
+          >
             {{
               (resultado.respuestasCorrectas / resultado.totalPreguntas) * 10
                 | number : "1.2-2"
