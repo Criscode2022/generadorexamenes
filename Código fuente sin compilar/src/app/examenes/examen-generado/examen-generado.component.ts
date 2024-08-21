@@ -23,18 +23,19 @@ export class ExamenGeneradoComponent implements OnChanges {
   @Input() preguntas: Pregunta[] = [];
   @Input() respuestasUsuario = [] as string[];
 
+  private storageService = inject(StorageService);
+
   protected show = false;
+  protected completed = false;
+
+  protected respuestasCorrectas = 0;
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['preguntas']) {
       this.show = false;
+      this.completed = false;
     }
   }
-
-  private storageService = inject(StorageService);
-
-  protected completed = false;
-  protected respuestasCorrectas = 0;
 
   protected contarRespuestasCorrectas() {
     let respuestasCorrectasUsuario = 0;
