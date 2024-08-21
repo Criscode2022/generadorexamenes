@@ -47,25 +47,6 @@ ol li {
   padding: 0;
 }
 
-#actual {
-  color: rgb(110, 0, 110);
-  background-color: white;
-  border: solid black 1px;
-  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.75);
-  padding: 20pt;
-  border-radius: 10pt;
-  margin-bottom: 20pt;
-}
-
-.passed {
-  color: green !important;
-  font-weight: bold;
-}
-
-.failed {
-  color: red !important;
-}
-
 @media (max-width: 835px) {
   mat-radio-group {
     display: flex;

@@ -1,0 +1,45 @@
+<div>
+  <h2 class="text-center">Tu examen</h2>
+  <div class="grid-container">
+    <div *ngFor="let pregunta of preguntas; let i = index">
+      <p>
+        <strong>{{ i + 1 }}. {{ pregunta.pregunta }}</strong>
+      </p>
+      <mat-radio-group
+        [name]="'pregunta' + i"
+        [(ngModel)]="respuestasUsuario[i]"
+        [disabled]="show"
+      >
+        <div *ngFor="let respuesta of pregunta.respuestas">
+          <p>
+            <mat-radio-button [value]="respuesta.respuesta">
+              <span
+                class="cursor-pointer hover:text-blue-800"
+                [class.failed]="respuesta.es_correcta === 'NO' && show"
+                [class.passed]="respuesta.es_correcta === 'SI' && show"
+                >{{ respuesta.respuesta }}</span
+              >
+            </mat-radio-button>
+          </p>
+        </div>
+      </mat-radio-group>
+    </div>
+  </div>
+</div>
+
+<button
+  *ngIf="!completed"
+  class="checkBtn"
+  mat-raised-button
+  color="primary"
+  (click)="contarRespuestasCorrectas()"
+>
+  Comprobar respuestas
+</button>
+
+<div id="actual" *ngIf="show">
+  <h2 class="text-center">Puntuación de este examen</h2>
+  <h4>
+    Respuestas correctas: {{ respuestasCorrectas }}/{{ preguntas.length }}
+  </h4>
+</div>

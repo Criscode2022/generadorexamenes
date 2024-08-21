@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { ExamenesComponent } from './examenes/examenes.component';
 import { LayoutComponent } from './layout/layout.component';
 import { NotFoundComponent } from './not-found/not-found.component';
 
@@ -10,8 +11,7 @@ const routes: Routes = [
     children: [
       {
         path: '',
-        loadChildren: () =>
-          import('./examenes/examenes.module').then((m) => m.ExamenesModule),
+        component: ExamenesComponent,
       },
       {
         path: 'gestionar',

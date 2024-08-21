@@ -10,6 +10,7 @@ const routes: Routes = [
     path: '',
     component: GestionarPreguntasComponent,
     children: [
+      { path: '', redirectTo: 'agregar', pathMatch: 'full' },
       {
         path: 'eliminar',
         component: EliminarPreguntaComponent,

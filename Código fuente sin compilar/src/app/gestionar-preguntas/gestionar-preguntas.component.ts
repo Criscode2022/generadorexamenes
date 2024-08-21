@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Pregunta, Tema } from 'src/main';
-import { ServicioDatosService } from '../servicio-datos.service';
+import { ServicioDatosService } from '../core/services/servicio-datos/servicio-datos.service';
 
 @Component({
   selector: 'app-gestionar-preguntas',

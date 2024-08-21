@@ -1,16 +1,3 @@
-h2 {
-  font-weight: bold;
-  margin-top: 20pt;
-  margin-bottom: 20pt;
-}
-
-h3 {
-  width: 100%;
-  font-weight: bold;
-  margin-top: 20pt;
-  margin-bottom: 20pt;
-}
-
 @media (max-width: 765px) {
   mat-form-field {
     width: 80%;

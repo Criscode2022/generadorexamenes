@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { ServicioDatosService } from 'src/app/servicio-datos.service';
+import { ServicioDatosService } from 'src/app/core/services/servicio-datos/servicio-datos.service';
 import { Pregunta, Tema } from 'src/main';
 
 @Component({

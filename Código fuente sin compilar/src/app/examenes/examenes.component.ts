@@ -1,37 +1,70 @@
-import { HttpClient } from '@angular/common/http';
+import { CommonModule } from '@angular/common';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Component, inject, OnInit } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatSelectModule } from '@angular/material/select';
+import { MatTabsModule } from '@angular/material/tabs';
 import { saveAs } from 'file-saver';
 import { catchError, delay, of, retryWhen } from 'rxjs';
 import { Pregunta, RespuestaServidor, Tema } from 'src/main';
 import * as XLSX from 'xlsx';
-import { ServicioDatosService } from '../servicio-datos.service';
+import { ServicioDatosService } from '../core/services/servicio-datos/servicio-datos.service';
+import { StorageService } from '../core/services/storage-service/storage.service';
+import { HeaderModule } from '../header/header.module';
+import { ExamenGeneradoComponent } from './examen-generado/examen-generado.component';
 import { QuizForm } from './quiz.form';
 
 @Component({
   selector: 'app-examenes',
   templateUrl: './examenes.component.html',
   styleUrls: ['./examenes.component.css'],
+  standalone: true,
+  imports: [
+    CommonModule,
+    HeaderModule,
+    MatButtonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    MatRadioModule,
+    MatMenuModule,
+    MatCheckboxModule,
+    MatTabsModule,
+    MatProgressSpinnerModule,
+    MatInputModule,
+    MatIconModule,
+    HttpClientModule,
+    MatSelectModule,
+    ExamenGeneradoComponent,
+  ],
 })
 export class ExamenesComponent extends QuizForm implements OnInit {
   protected difficulties = [1, 2, 3];
   protected preguntas: Pregunta[] = [];
   protected examenGenerado = false;
-  protected respuestasUsuario: any[] = [];
   protected resultadosExamenes: any[] = [];
-  protected respuestasCorrectas = 0;
 
   protected themesList = [] as Tema[];
 
-  protected show = false;
   protected loading = false;
   protected completed = false;
   protected submitted = false;
 
   private http = inject(HttpClient);
+  private StorageService = inject(StorageService);
   private servicioDatosService = inject(ServicioDatosService);
 
   ngOnInit() {
-    this.cargarResultados();
+    this.StorageService.resultadosExamenes.subscribe((resultados) => {
+      this.resultadosExamenes = resultados;
+    });
+
     this.loadThemesWithRetry();
   }
 
@@ -47,48 +80,6 @@ export class ExamenesComponent extends QuizForm implements OnInit {
       .subscribe((temas) => {
         this.themesList = temas;
       });
-  }
-
-  protected contarRespuestasCorrectas() {
-    let respuestasCorrectasUsuario = 0;
-
-    for (let i = 0; i < this.preguntas.length; i++) {
-      const pregunta = this.preguntas[i];
-      const respuestaUsuario = this.respuestasUsuario[i];
-
-      for (const respuesta of pregunta.respuestas) {
-        if (
-          respuesta.respuesta === respuestaUsuario &&
-          respuesta.es_correcta === 'SI'
-        ) {
-          respuestasCorrectasUsuario++;
-        }
-      }
-    }
-
-    const resultado = {
-      respuestasCorrectas: respuestasCorrectasUsuario,
-      totalPreguntas: this.preguntas.length,
-      passed: respuestasCorrectasUsuario >= this.preguntas.length / 2,
-    };
-
-    this.respuestasCorrectas = respuestasCorrectasUsuario;
-
-    const id = new Date().getTime().toString();
-    localStorage.setItem(id, JSON.stringify(resultado));
-    this.cargarResultados();
-
-    if (window.innerWidth > 768) {
-      window.scrollTo({
-        top: 0,
-        behavior: 'smooth',
-      });
-    }
-
-    this.completed = true;
-    this.show = true;
-
-    return respuestasCorrectasUsuario;
   }
 
   protected descargarPreguntas() {
@@ -118,8 +109,8 @@ export class ExamenesComponent extends QuizForm implements OnInit {
       return;
     }
 
-    this.show = false;
     this.completed = false;
+
     this.examenGenerado = true;
 
     const data = {
@@ -138,16 +129,6 @@ export class ExamenesComponent extends QuizForm implements OnInit {
           console.error(error);
         }
       );
-  }
-
-  protected cargarResultados() {
-    this.resultadosExamenes = [];
-    for (const key in localStorage) {
-      const resultado = localStorage.getItem(key);
-      if (resultado) {
-        this.resultadosExamenes.push(JSON.parse(resultado));
-      }
-    }
   }
 
   protected descargarRespuestas() {

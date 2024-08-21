@@ -8,6 +8,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTabsModule } from '@angular/material/tabs';
@@ -21,17 +22,19 @@ import { NotFoundComponent } from './not-found/not-found.component';
 @NgModule({
   declarations: [AppComponent, NotFoundComponent, LayoutComponent],
   imports: [
-    AppRoutingModule,
-    BrowserAnimationsModule,
     BrowserModule,
+    BrowserAnimationsModule,
+    AppRoutingModule,
     HttpClientModule,
     ReactiveFormsModule,
     HeaderModule,
     MatButtonModule,
     MatCheckboxModule,
+    MatCheckboxModule,
     MatIconModule,
     MatInputModule,
     MatMenuModule,
+    MatProgressSpinnerModule,
     MatRadioModule,
     MatSelectModule,
     MatTabsModule,

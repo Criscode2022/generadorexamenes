@@ -40,6 +40,11 @@ mat-form-field {
   width: auto !important;
 }
 
-:host {
-  overflow-x: hidden;
+.passed {
+  color: green !important;
+  font-weight: bold;
+}
+
+.failed {
+  color: red !important;
 }
