@@ -74,11 +74,11 @@
     <app-examen-generado [preguntas]="preguntas"></app-examen-generado>
   </section>
 
-  <section>
+  <section class="mt-4 md:mt-0">
     <h2 class="text-center">Historial de examenes</h2>
 
     <ng-container *ngIf="resultadosExamenes.length; else noResults">
-      <ol class="relative flex flex-col align-middle">
+      <ul class="relative flex flex-col align-middle">
         <li *ngFor="let resultado of resultadosExamenes">
           Preguntas: <strong>{{ resultado.totalPreguntas }}</strong> ||
           Aciertos:
@@ -97,13 +97,13 @@
 
         <button
           color="warn"
-          class="w-1/2 mx-auto mt-4"
+          class="w-1/2 mx-auto mt-4 mb-4"
           mat-raised-button
           (click)="cleanHistory()"
         >
           Borrar historial
         </button>
-      </ol>
+      </ul>
     </ng-container>
   </section>
 </main>
@@ -123,7 +123,7 @@
 </div>
 
 <ng-template #noResults>
-  <p class="bg-white p-8 rounded shadow mt-4 md:mt-0">
+  <p class="bg-white p-8 rounded shadow">
     Aquí verás los resultados de tus exámenes completados
   </p>
 </ng-template>

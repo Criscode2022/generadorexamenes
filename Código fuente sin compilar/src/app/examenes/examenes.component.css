@@ -19,13 +19,8 @@
 }
 
 ul li {
-  margin: 20px;
+  margin: 15px;
   list-style: disc;
-}
-
-ol li {
-  margin: 10px;
-  list-style: decimal;
 }
 
 .botonDescargar {

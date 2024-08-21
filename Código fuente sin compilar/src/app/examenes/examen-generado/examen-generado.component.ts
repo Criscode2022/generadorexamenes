@@ -34,6 +34,7 @@ export class ExamenGeneradoComponent implements OnChanges {
     if (changes['preguntas']) {
       this.show = false;
       this.completed = false;
+      this.respuestasUsuario = [] as string[];
     }
   }
 
