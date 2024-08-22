@@ -71,7 +71,7 @@ export class ExamenesComponent extends QuizForm implements OnInit {
   private loadThemesWithRetry() {
     this.servicioDatosService.temas$
       .pipe(
-        retryWhen((errors) => errors.pipe(delay(5000))),
+        retryWhen((errors) => errors.pipe(delay(2000))),
         catchError((error) => {
           console.error('Failed to load themes after several retries', error);
           return of([]);

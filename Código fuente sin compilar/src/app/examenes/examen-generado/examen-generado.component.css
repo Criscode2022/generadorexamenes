@@ -7,3 +7,13 @@
   border-radius: 10pt;
   margin-bottom: 20pt;
 }
+
+.selected-radio {
+  font-weight: bold;
+  color: blue;
+}
+
+.cursor-pointer:hover {
+  font-weight: bold;
+  color: blue;
+}

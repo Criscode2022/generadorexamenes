@@ -14,11 +14,17 @@
           <p>
             <mat-radio-button [value]="respuesta.respuesta">
               <span
-                class="cursor-pointer hover:text-blue-800"
+                class="cursor-pointer"
+                [ngClass]="{
+                  'selected-radio':
+                    respuestasUsuario[i] === respuesta.respuesta && !show,
+                  'cursor-pointer': !show
+                }"
                 [class.failed]="respuesta.es_correcta === 'NO' && show"
                 [class.passed]="respuesta.es_correcta === 'SI' && show"
-                >{{ respuesta.respuesta }}</span
               >
+                {{ respuesta.respuesta }}
+              </span>
             </mat-radio-button>
           </p>
         </div>
@@ -38,8 +44,14 @@
 </button>
 
 <div id="actual" *ngIf="show">
-  <h2 class="text-center">Puntuación de este examen</h2>
+  <h2 class="text-center font-bold">Puntuación de este examen</h2>
+
   <h4>
     Respuestas correctas: {{ respuestasCorrectas }}/{{ preguntas.length }}
+  </h4>
+
+  <h4>
+    Puntuación sobre 10:
+    {{ (respuestasCorrectas / preguntas.length) * 10 | number : "1.2-2" }}
   </h4>
 </div>
