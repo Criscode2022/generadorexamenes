@@ -1,8 +1,8 @@
-import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, ReplaySubject } from 'rxjs';
+import { Injectable } from '@angular/core';
+import { Observable, ReplaySubject, retry } from 'rxjs';
+import { Theme } from 'src/app/shared/types/theme';
 import { Pregunta } from 'src/main';
-import { Tema } from 'src/main';
 
 @Injectable({
   providedIn: 'root',
@@ -11,7 +11,7 @@ export class ServicioDatosService {
   private preguntasSubject: ReplaySubject<Pregunta[]> = new ReplaySubject<
     Pregunta[]
   >(1);
-  private temasSubject: ReplaySubject<Tema[]> = new ReplaySubject<Tema[]>(1);
+  private temasSubject: ReplaySubject<Theme[]> = new ReplaySubject<Theme[]>(1);
 
   public readonly temas$ = this.temasSubject.asObservable();
   public readonly preguntas$ = this.preguntasSubject.asObservable();
@@ -25,7 +25,7 @@ export class ServicioDatosService {
     return this.preguntas$;
   }
 
-  getTemas(): Observable<Tema[]> {
+  getTemas(): Observable<Theme[]> {
     return this.temas$;
   }
 
@@ -38,15 +38,18 @@ export class ServicioDatosService {
   }
 
   private loadTemas() {
-    this.http.get<Tema[]>('https://api-examenes.onrender.com/temas').subscribe(
-      (temas) => {
-        console.log('Temas recibidos:', temas);
-        this.temasSubject.next(temas);
-      },
-      (error) => {
-        console.error('Error al cargar los temas:', error);
-      }
-    );
+    this.http
+      .get<Theme[]>('https://api-examenes.onrender.com/temas')
+      .pipe(retry(10))
+      .subscribe(
+        (temas) => {
+          console.log('Temas recibidos:', temas);
+          this.temasSubject.next(temas);
+        },
+        (error) => {
+          console.error('Error al cargar los temas:', error);
+        }
+      );
   }
 
   async actualizarPreguntas() {

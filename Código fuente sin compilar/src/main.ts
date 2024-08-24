@@ -6,11 +6,6 @@ platformBrowserDynamic()
   .bootstrapModule(AppModule)
   .catch((err) => console.error(err));
 
-export interface Tema {
-  id_tema?: number;
-  tema: string;
-}
-
 export interface Pregunta {
   id_pregunta?: number;
   pregunta: string;

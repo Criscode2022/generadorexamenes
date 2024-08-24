@@ -2,8 +2,9 @@ import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Pregunta, Tema } from 'src/main';
+import { Pregunta } from 'src/main';
 import { ServicioDatosService } from '../core/services/servicio-datos/servicio-datos.service';
+import { Theme } from '../shared/types/theme';
 
 @Component({
   selector: 'app-gestionar-preguntas',
@@ -12,7 +13,7 @@ import { ServicioDatosService } from '../core/services/servicio-datos/servicio-d
 })
 export class GestionarPreguntasComponent implements OnInit {
   temas = new FormControl();
-  themesList: Tema[] = [];
+  themesList: Theme[] = [];
   difficulties: number[] = [1, 2, 3];
   dificultadSeleccionadaAgregar: number = this.difficulties[0];
   dificultadSeleccionadaModificar: number = this.difficulties[0];
@@ -26,7 +27,7 @@ export class GestionarPreguntasComponent implements OnInit {
   respuesta2Correcta: string = 'NO';
   respuesta3Correcta: string = 'NO';
   respuesta4Correcta: string = 'NO';
-  temaSeleccionado: Tema = this.themesList[0];
+  temaSeleccionado: Theme = this.themesList[0];
   idPreguntaInsertada: number | undefined = 0;
   respuestaCorrecta: number = 0;
   rutaCambiada = false;

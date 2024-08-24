@@ -2,7 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { Component, inject, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { ServicioDatosService } from 'src/app/core/services/servicio-datos/servicio-datos.service';
-import { Pregunta, Tema } from 'src/main';
+import { Theme } from 'src/app/shared/types/theme';
+import { Pregunta } from 'src/main';
 
 @Component({
   selector: 'app-eliminar-pregunta',
@@ -12,7 +13,7 @@ import { Pregunta, Tema } from 'src/main';
 export class EliminarPreguntaComponent implements OnInit {
   mensajeEliminar = '';
   temas = new FormControl();
-  themesList: Tema[] = [];
+  themesList: Theme[] = [];
   difficulties: number[] = [1, 2, 3];
   dificultadSeleccionadaAgregar: number = this.difficulties[0];
   dificultadSeleccionadaModificar: number = this.difficulties[0];
@@ -26,7 +27,7 @@ export class EliminarPreguntaComponent implements OnInit {
   respuesta2Correcta: string = 'NO';
   respuesta3Correcta: string = 'NO';
   respuesta4Correcta: string = 'NO';
-  temaSeleccionado: Tema = this.themesList[0];
+  temaSeleccionado: Theme = this.themesList[0];
   idPreguntaInsertada: number | undefined = 0;
   respuestaCorrecta: number = 0;
   idPregunta: number = 0;
