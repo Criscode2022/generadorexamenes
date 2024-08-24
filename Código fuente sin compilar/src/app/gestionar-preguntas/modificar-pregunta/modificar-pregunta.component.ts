@@ -1,8 +1,7 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
-import { Router } from '@angular/router';
 import { ServicioDatosService } from 'src/app/core/services/servicio-datos/servicio-datos.service';
 import { Pregunta, Tema } from 'src/main';
 
@@ -30,7 +29,6 @@ export class ModificarPreguntaComponent implements OnInit {
   temaSeleccionado: Tema = this.themesList[0];
   idPreguntaInsertada: number | undefined = 0;
   respuestaCorrecta: number = 0;
-  rutaCambiada = false;
   idPregunta: number = 0;
   ListaPreguntas: Pregunta[] = [];
   preguntaSeleccionada = new FormControl();
@@ -44,17 +42,10 @@ export class ModificarPreguntaComponent implements OnInit {
   preguntasFiltradas: Pregunta[] = [];
   private todasLasRespuestas: any[] = [];
 
-  constructor(
-    private http: HttpClient,
-    private router: Router,
-    private ServicioDatosService: ServicioDatosService
-  ) {
-    this.obtenerTemas();
-    this.obtenerPreguntas();
-    this.obtenerRespuestas();
-  }
+  private http = inject(HttpClient);
+  private servicioDatosService = inject(ServicioDatosService);
 
-  obtenerRespuestas() {
+  private obtenerRespuestas() {
     this.http.get('https://api-examenes.onrender.com/respuestas').subscribe(
       (data: any) => {
         this.todasLasRespuestas = data;
@@ -65,21 +56,23 @@ export class ModificarPreguntaComponent implements OnInit {
     );
   }
 
-  ngOnInit(): void {
+  ngOnInit() {
+    this.obtenerTemas();
+    this.obtenerPreguntas();
+    this.obtenerRespuestas();
+
     this.preguntasFiltradas = this.ListaPreguntas;
   }
 
-  setPreguntaSeleccionada(event: MatAutocompleteSelectedEvent): void {
-    console.log(event.option.value.id_pregunta); // Verifica qué se está recibiendo aquí
+  protected setPreguntaSeleccionada(event: MatAutocompleteSelectedEvent) {
     this.preguntaSeleccionadaModificar.setValue(event.option.value);
   }
 
-  displayFn(pregunta: any): string {
+  protected displayFn(pregunta: any): string {
     return pregunta && pregunta.pregunta ? pregunta.pregunta : '';
   }
 
-  setRespuestaCorrecta(valor: string) {
-    // Reiniciamos los valores por defecto
+  protected setRespuestaCorrecta(valor: string) {
     this.respuesta1Correcta = 'NO';
     this.respuesta2Correcta = 'NO';
     this.respuesta3Correcta = 'NO';
@@ -102,60 +95,42 @@ export class ModificarPreguntaComponent implements OnInit {
         this.respuestaCorrecta = 4;
         break;
     }
-
-    console.log('La respuesta correcta es ' + valor);
-    console.log(this.respuesta1Correcta);
-    console.log(this.respuesta2Correcta);
-    console.log(this.respuesta3Correcta);
-    console.log(this.respuesta4Correcta);
   }
 
-  filtrarPreguntas(texto: string): void {
+  protected filtrarPreguntas(texto: string) {
     this.preguntasFiltradas = this.ListaPreguntas.filter((pregunta) =>
       pregunta.pregunta.toLowerCase().includes(texto.toLowerCase())
     );
   }
 
-  async modificarPregunta() {
-    console.log(`Respuesta 1: ${this.respuesta1}`);
-    console.log(`Respuesta 2: ${this.respuesta2}`);
-    console.log(`Respuesta 3: ${this.respuesta3}`);
-    console.log(`Respuesta 4: ${this.respuesta4}`);
-    // Actualizar la pregunta primero.
+  protected async modificarPregunta() {
     const preguntaModificada = {
       id_tema: this.temas.value.id_tema,
       pregunta: this.enunciadoModificar,
       dificultad: this.dificultadSeleccionadaModificar,
     };
 
-    console.log('Pregunta modificada:', preguntaModificada); // Nuevo console.log
-
     try {
-      const preguntaRes = await this.http
+      await this.http
         .put(
           `https://api-examenes.onrender.com/preguntas/${this.preguntaSeleccionadaModificar.value.id_pregunta}`,
           preguntaModificada
         )
         .toPromise();
-      console.log('Pregunta modificada correctamente:', preguntaRes);
       this.mensajeModificar = 'Pregunta modificada correctamente';
-      this.ServicioDatosService.actualizarPreguntas();
+      this.servicioDatosService.actualizarPreguntas();
 
-      // Recuperar las respuestas existentes para la pregunta.
       const respuestas = this.todasLasRespuestas.filter(
         (respuesta) =>
           respuesta.id_pregunta ===
           this.preguntaSeleccionadaModificar.value.id_pregunta
       );
 
-      console.log('Respuestas recuperadas:', respuestas); // Nuevo console.log
-
       for (let i = 0; i < respuestas.length; i++) {
         const respuestaExistente = respuestas[i];
         const esCorrecta = i + 1 === this.respuestaCorrecta ? 'SI' : 'NO';
         let textoRespuesta;
 
-        // Asignar el texto de la respuesta según el índice
         switch (i) {
           case 0:
             textoRespuesta = this.respuesta1;
@@ -178,41 +153,40 @@ export class ModificarPreguntaComponent implements OnInit {
           respuesta: textoRespuesta,
           es_correcta: esCorrecta,
         };
-        console.log('Respuesta modificada:', respuestaModificada); // Nuevo console.log
 
         try {
-          const respuestaRes = await this.http
+          await this.http
             .put(
               `https://api-examenes.onrender.com/respuestas/${respuestaExistente.id_respuesta}`,
               respuestaModificada
             )
             .toPromise();
-          console.log('Respuesta modificada correctamente:', respuestaRes);
           this.mensajeModificarRespuestas += ` Respuesta ${
             i + 1
-          } modificada correctamente <br/>`;
+          } modificada correctamente`;
         } catch (error: any) {
           console.error('Error modificando la respuesta:', error);
           this.mensajeModificarRespuestas += `Error modificando la respuesta ${
             i + 1
-          }: ${error.message} <br/>`;
+          }: ${error.message}`;
         }
       }
 
-      // Actualizar las respuestas en el servicio
-      this.ServicioDatosService.actualizarPreguntas();
+      this.servicioDatosService.actualizarPreguntas();
     } catch (error: any) {
       console.error('Error modificando la pregunta:', error);
       this.mensajeModificar = `Error modificando la pregunta: ${error.message}`;
     }
   }
 
-  obtenerTemas() {
-    this.ServicioDatosService.temas$.subscribe(
+  private obtenerTemas() {
+    this.servicioDatosService.temas$.subscribe(
       (data) => {
-        if (data) {
-          this.themesList = data;
+        if (!data) {
+          return;
         }
+
+        this.themesList = data;
       },
       (error) => {
         console.error('Error al obtener datos del servicio REST:', error);
@@ -220,19 +194,17 @@ export class ModificarPreguntaComponent implements OnInit {
     );
   }
 
-  obtenerPreguntas() {
-    this.ServicioDatosService.preguntas$.subscribe(
+  private obtenerPreguntas() {
+    this.servicioDatosService.preguntas$.subscribe(
       (data) => {
-        if (data && data.length > 0) {
-          this.ListaPreguntas = data;
-          // La última pregunta en la base de datos es la que acabamos de insertar
-          this.idPreguntaInsertada = data[data.length - 1].id_pregunta;
-          console.log(
-            'El Id de la pregunta insertada es ' + this.idPreguntaInsertada
-          );
+        if (!(data && data.length)) {
+          return;
         }
+
+        this.ListaPreguntas = data;
+        this.idPreguntaInsertada = data[data.length - 1].id_pregunta;
       },
-      (error) => {
+      (error: any) => {
         console.error('Error al obtener datos del servicio REST:', error);
       }
     );

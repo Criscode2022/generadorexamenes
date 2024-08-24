@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { ServicioDatosService } from 'src/app/core/services/servicio-datos/servicio-datos.service';
 import { Pregunta, Tema } from 'src/main';
@@ -38,26 +38,16 @@ export class AgregarPreguntaComponent implements OnInit {
   mensajeAgregarRespuestas = '';
   mensajeModificar = '';
   mensajeModificarRespuestas = '';
-  respuestas: string[] = ['', '', '', ''];
 
-  constructor(
-    private http: HttpClient,
-    private ServicioDatosService: ServicioDatosService
-  ) {
-    this.obtenerTemas();
-  }
+  private http = inject(HttpClient);
+  private servicioDatosService = inject(ServicioDatosService);
 
-  ngOnInit(): void {
+  ngOnInit() {
     this.obtenerTemas();
     this.obtenerPreguntas();
   }
 
-  setRespuestaCorrecta(valor: string) {
-    //Reiniciamos los valores por defecto
-    this.respuesta1Correcta = 'NO';
-    this.respuesta2Correcta = 'NO';
-    this.respuesta3Correcta = 'NO';
-    this.respuesta4Correcta = 'NO';
+  protected setRespuestaCorrecta(valor: string) {
     switch (valor) {
       case '1':
         this.respuesta1Correcta = 'SI';
@@ -76,19 +66,16 @@ export class AgregarPreguntaComponent implements OnInit {
         this.respuestaCorrecta = 4;
         break;
     }
-
-    console.log('La respuesta correcta es ' + valor);
-    console.log(this.respuesta1Correcta);
-    console.log(this.respuesta2Correcta);
-    console.log(this.respuesta3Correcta);
-    console.log(this.respuesta4Correcta);
   }
-  obtenerTemas() {
-    this.ServicioDatosService.temas$.subscribe(
+
+  private obtenerTemas() {
+    this.servicioDatosService.temas$.subscribe(
       (data) => {
-        if (data) {
-          this.themesList = data;
+        if (!data) {
+          return;
         }
+
+        this.themesList = data;
       },
       (error) => {
         console.error('Error al obtener datos del servicio REST:', error);
@@ -96,17 +83,15 @@ export class AgregarPreguntaComponent implements OnInit {
     );
   }
 
-  obtenerPreguntas() {
-    this.ServicioDatosService.preguntas$.subscribe(
+  protected obtenerPreguntas() {
+    this.servicioDatosService.preguntas$.subscribe(
       (data) => {
-        if (data && data.length > 0) {
-          this.ListaPreguntas = data;
-          // La última pregunta en la base de datos es la que acabamos de insertar
-          this.idPreguntaInsertada = data[data.length - 1].id_pregunta;
-          console.log(
-            'El Id de la pregunta insertada es ' + this.idPreguntaInsertada
-          );
+        if (!(data && data.length)) {
+          return;
         }
+
+        this.ListaPreguntas = data;
+        this.idPreguntaInsertada = data[data.length - 1].id_pregunta;
       },
       (error) => {
         console.error('Error al obtener datos del servicio REST:', error);
@@ -114,7 +99,7 @@ export class AgregarPreguntaComponent implements OnInit {
     );
   }
 
-  agregarPregunta() {
+  protected agregarPregunta() {
     const temaSeleccionado = this.temas.value.id_tema;
     const data = {
       id_tema: '' + temaSeleccionado,
@@ -122,34 +107,25 @@ export class AgregarPreguntaComponent implements OnInit {
       dificultad: '' + this.dificultadSeleccionadaAgregar,
     };
 
-    console.log(data);
-
     this.http
       .post('https://api-examenes.onrender.com/preguntas', data)
       .subscribe(
-        (res) => {
-          console.log(res);
-          console.log('Pregunta insertada correctamente');
+        () => {
           this.mensajeAgregar = 'Pregunta insertada correctamente';
 
-          // Obtener todas las preguntas de la base de datos
           this.http
             .get<Pregunta[]>('https://api-examenes.onrender.com/preguntas')
             .subscribe(
               (response) => {
-                if (response && response.length > 0) {
-                  //La última pregunta en la base de datos es la que acabamos de insertar
-                  this.idPreguntaInsertada =
-                    response[response.length - 1].id_pregunta;
-                  console.log(
-                    'El Id de la pregunta insertada es ' +
-                      this.idPreguntaInsertada
-                  );
-                  this.agregarRespuestas();
-
-                  //Llamada al servicio para actualizar la lista de preguntas después de insertar una nueva
-                  this.ServicioDatosService.actualizarPreguntas();
+                if (!(response && response.length)) {
+                  return;
                 }
+
+                this.idPreguntaInsertada =
+                  response[response.length - 1].id_pregunta;
+
+                this.agregarRespuestas();
+                this.servicioDatosService.actualizarPreguntas();
               },
               (error) => {
                 console.error('Error al obtener las preguntas: ', error);
@@ -165,7 +141,7 @@ export class AgregarPreguntaComponent implements OnInit {
       );
   }
 
-  async agregarRespuestas() {
+  private async agregarRespuestas() {
     const respuestasData = [
       {
         es_correcta: this.respuesta1Correcta === 'SI' ? 'SI' : 'NO',
@@ -189,48 +165,19 @@ export class AgregarPreguntaComponent implements OnInit {
       },
     ];
 
-    // Filtro para respuesta correcta
-    const respuestaCorrecta = respuestasData.filter(
-      (respuesta) => respuesta.es_correcta === 'SI'
-    );
+    respuestasData.sort((a) => (a.es_correcta === 'SI' ? -1 : 1));
 
-    // POST de la respuesta correcta
-    console.log(
-      'Enviando respuesta correcta al servidor: ',
-      respuestaCorrecta[0]
-    );
     try {
-      const res = await this.http
-        .post(
-          'https://api-examenes.onrender.com/respuestas',
-          respuestaCorrecta[0]
-        )
+      await this.http
+        .post('https://api-examenes.onrender.com/respuestas', {
+          respuestas: respuestasData,
+        })
         .toPromise();
-      console.log('Respuesta del servidor: ', res);
-      console.log('Respuesta correcta insertada correctamente');
+
+      this.mensajeAgregarRespuestas = 'Respuestas insertadas correctamente';
     } catch (error) {
-      console.error('Error al agregar respuesta correcta: ', error);
-    }
-
-    // Filtro para respuestas incorrectas
-    const respuestasIncorrectas = respuestasData.filter(
-      (respuesta) => respuesta.es_correcta === 'NO'
-    );
-
-    // POST de cada respuesta incorrecta
-    for (const respuesta of respuestasIncorrectas) {
-      console.log('Enviando respuesta incorrecta al servidor: ', respuesta);
-      try {
-        const res = await this.http
-          .post('https://api-examenes.onrender.com/respuestas', respuesta)
-          .toPromise();
-        console.log('Respuesta del servidor: ', res);
-        console.log('Respuesta incorrecta insertada correctamente');
-        this.mensajeAgregarRespuestas = 'Respuestas insertadas correctamente';
-      } catch (error) {
-        console.error('Error al agregar respuesta incorrecta: ', error);
-        this.mensajeAgregarRespuestas = 'Error al insertar respuestas';
-      }
+      console.error('Error al agregar respuestas: ', error);
+      this.mensajeAgregarRespuestas = 'Error al insertar respuestas';
     }
   }
 }

@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { ServicioDatosService } from 'src/app/core/services/servicio-datos/servicio-datos.service';
 import { Pregunta, Tema } from 'src/main';
@@ -29,7 +29,6 @@ export class EliminarPreguntaComponent implements OnInit {
   temaSeleccionado: Tema = this.themesList[0];
   idPreguntaInsertada: number | undefined = 0;
   respuestaCorrecta: number = 0;
-  rutaCambiada = false;
   idPregunta: number = 0;
   ListaPreguntas: Pregunta[] = [];
   preguntaSeleccionada = new FormControl();
@@ -38,44 +37,34 @@ export class EliminarPreguntaComponent implements OnInit {
   mensajeAgregarRespuestas = '';
   mensajeModificar = '';
   mensajeModificarRespuestas = '';
-  respuestas: string[] = ['', '', '', ''];
   preguntasFiltradas: Pregunta[] = [];
 
-  constructor(
-    private http: HttpClient,
-    private ServicioDatosService: ServicioDatosService
-  ) {
-    this.obtenerTemas();
-  }
+  private http = inject(HttpClient);
+  private servicioDatosService = inject(ServicioDatosService);
 
-  ngOnInit(): void {
+  ngOnInit() {
     this.obtenerTemas();
     this.obtenerPreguntas();
     this.preguntasFiltradas = this.ListaPreguntas;
   }
 
-  filtrarPreguntas(texto: string): void {
+  protected filtrarPreguntas(texto: string) {
     this.preguntasFiltradas = this.ListaPreguntas.filter((pregunta) =>
       pregunta.pregunta.toLowerCase().includes(texto.toLowerCase())
     );
   }
 
-  eliminarPregunta() {
+  protected eliminarPregunta() {
     this.http
       .delete('https://api-examenes.onrender.com/preguntas/' + this.idPregunta)
       .subscribe(
         (res) => {
-          console.log(
-            'https://api-examenes.onrender.com/preguntas/' + this.idPregunta
-          );
           if (res === false) {
             console.error('Error al eliminar la pregunta');
             this.mensajeEliminar = 'Error al eliminar la pregunta';
           } else {
-            console.log(res);
-            console.log('Pregunta eliminada correctamente');
             this.mensajeEliminar = 'Pregunta eliminada correctamente';
-            this.ServicioDatosService.actualizarPreguntas();
+            this.servicioDatosService.actualizarPreguntas();
           }
         },
         (err) => {
@@ -86,12 +75,14 @@ export class EliminarPreguntaComponent implements OnInit {
       );
   }
 
-  obtenerTemas() {
-    this.ServicioDatosService.temas$.subscribe(
+  protected obtenerTemas() {
+    this.servicioDatosService.temas$.subscribe(
       (data) => {
-        if (data) {
-          this.themesList = data;
+        if (!data) {
+          return;
         }
+
+        this.themesList = data;
       },
       (error) => {
         console.error('Error al obtener datos del servicio REST:', error);
@@ -99,17 +90,14 @@ export class EliminarPreguntaComponent implements OnInit {
     );
   }
 
-  obtenerPreguntas() {
-    this.ServicioDatosService.preguntas$.subscribe(
+  private obtenerPreguntas() {
+    this.servicioDatosService.preguntas$.subscribe(
       (data) => {
-        if (data && data.length > 0) {
-          this.ListaPreguntas = data;
-          // La última pregunta en la base de datos es la que acabamos de insertar
-          this.idPreguntaInsertada = data[data.length - 1].id_pregunta;
-          console.log(
-            'El Id de la pregunta insertada es ' + this.idPreguntaInsertada
-          );
+        if (!(data && data.length)) {
+          return;
         }
+        this.ListaPreguntas = data;
+        this.idPreguntaInsertada = data[data.length - 1].id_pregunta;
       },
       (error) => {
         console.error('Error al obtener datos del servicio REST:', error);

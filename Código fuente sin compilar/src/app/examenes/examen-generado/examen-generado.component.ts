@@ -31,11 +31,13 @@ export class ExamenGeneradoComponent implements OnChanges {
   protected respuestasCorrectas = 0;
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes['preguntas']) {
-      this.show = false;
-      this.completed = false;
-      this.respuestasUsuario = [] as string[];
+    if (!changes['preguntas']) {
+      return;
     }
+
+    this.show = false;
+    this.completed = false;
+    this.respuestasUsuario = [] as string[];
   }
 
   protected contarRespuestasCorrectas() {
