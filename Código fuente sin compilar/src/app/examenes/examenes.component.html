@@ -3,13 +3,13 @@
     <h2 class="text-center">Configura tu examen</h2>
     <form [formGroup]="form" (ngSubmit)="devolverpreguntas()">
       <h3 class="font-bold my-5">Temas</h3>
-      <ng-container *ngIf="themes$ | async as themes; else loading">
+      <ng-container *ngIf="themesList.length; else loading">
         <mat-form-field>
           <mat-label>Temas</mat-label>
 
           <mat-select formControlName="temas" multiple>
-            <mat-option *ngFor="let theme of themes" [value]="theme.tema">{{
-              theme.tema
+            <mat-option *ngFor="let tema of themesList" [value]="tema.tema">{{
+              tema.tema
             }}</mat-option>
           </mat-select>
 

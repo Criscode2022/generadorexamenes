@@ -1,6 +1,15 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, ReplaySubject, retry } from 'rxjs';
+import {
+  catchError,
+  delay,
+  Observable,
+  ReplaySubject,
+  retry,
+  retryWhen,
+  take,
+  throwError,
+} from 'rxjs';
 import { Theme } from 'src/app/shared/types/theme';
 import { Pregunta } from 'src/main';
 
@@ -40,14 +49,21 @@ export class ServicioDatosService {
   private loadTemas() {
     this.http
       .get<Theme[]>('https://api-examenes.onrender.com/temas')
-      .pipe(retry(10))
+      .pipe(
+        retry(10),
+        retryWhen((errors) => errors.pipe(delay(1000), take(5))),
+        catchError((error) => {
+          console.error('Error al cargar los temas:', error);
+          return throwError(error);
+        })
+      )
       .subscribe(
         (temas) => {
           console.log('Temas recibidos:', temas);
           this.temasSubject.next(temas);
         },
         (error) => {
-          console.error('Error al cargar los temas:', error);
+          console.error('Error final después de reintentos:', error);
         }
       );
   }
