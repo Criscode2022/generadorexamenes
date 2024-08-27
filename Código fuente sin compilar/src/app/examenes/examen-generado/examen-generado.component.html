@@ -44,14 +44,14 @@
 </button>
 
 <div id="actual" *ngIf="show">
-  <h2 class="text-center font-bold">Puntuación de este examen</h2>
+  <h2 class="text-center font-bold">Puntuación</h2>
 
-  <h4>
-    Respuestas correctas: {{ respuestasCorrectas }}/{{ preguntas.length }}
-  </h4>
+  <p>
+    Respuestas correctas: <strong> {{ respuestasCorrectas }}/{{ preguntas.length }} </strong>
+  </p>
 
-  <h4>
+  <p>
     Puntuación sobre 10:
-    {{ (respuestasCorrectas / preguntas.length) * 10 | number : "1.2-2" }}
-  </h4>
+   <strong> {{ (respuestasCorrectas / preguntas.length) * 10 | number : "1.2-2" }}</strong>
+  </p>
 </div>
