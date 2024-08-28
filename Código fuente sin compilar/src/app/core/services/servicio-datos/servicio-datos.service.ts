@@ -10,15 +10,15 @@ import {
   take,
   throwError,
 } from 'rxjs';
+import { Question } from 'src/app/shared/types/question';
 import { Theme } from 'src/app/shared/types/theme';
-import { Pregunta } from 'src/main';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ServicioDatosService {
-  private preguntasSubject: ReplaySubject<Pregunta[]> = new ReplaySubject<
-    Pregunta[]
+  private preguntasSubject: ReplaySubject<Question[]> = new ReplaySubject<
+    Question[]
   >(1);
   private temasSubject: ReplaySubject<Theme[]> = new ReplaySubject<Theme[]>(1);
 
@@ -30,7 +30,7 @@ export class ServicioDatosService {
     this.loadTemas();
   }
 
-  getPreguntas(): Observable<Pregunta[]> {
+  getPreguntas(): Observable<Question[]> {
     return this.preguntas$;
   }
 
@@ -40,7 +40,7 @@ export class ServicioDatosService {
 
   private loadPreguntas() {
     this.http
-      .get<Pregunta[]>('https://api-examenes.onrender.com/preguntas')
+      .get<Question[]>('https://api-examenes.onrender.com/preguntas')
       .subscribe((preguntas) => {
         this.preguntasSubject.next(preguntas);
       });
@@ -71,7 +71,7 @@ export class ServicioDatosService {
   async actualizarPreguntas() {
     try {
       const response = await this.http
-        .get<Pregunta[]>('https://api-examenes.onrender.com/preguntas/')
+        .get<Question[]>('https://api-examenes.onrender.com/preguntas/')
         .toPromise();
       if (response) {
         this.preguntasSubject.next(response);

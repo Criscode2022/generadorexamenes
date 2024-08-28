@@ -12,13 +12,12 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTabsModule } from '@angular/material/tabs';
 import { saveAs } from 'file-saver';
-import { catchError, delay, of, retryWhen } from 'rxjs';
-import { Pregunta, RespuestaServidor } from 'src/main';
+import { RespuestaServidor } from 'src/main';
 import * as XLSX from 'xlsx';
 import { ServicioDatosService } from '../core/services/servicio-datos/servicio-datos.service';
 import { StorageService } from '../core/services/storage-service/storage.service';
 import { HeaderModule } from '../header/header.module';
-import { Theme } from '../shared/types/theme';
+import { Question } from '../shared/types/question';
 import { ExamenGeneradoComponent } from './examen-generado/examen-generado.component';
 import { QuizForm } from './quiz.form';
 
@@ -51,9 +50,9 @@ export class ExamenesComponent extends QuizForm implements OnInit {
   private servicioDatosService = inject(ServicioDatosService);
 
   protected difficulties = [1, 2, 3];
-  protected preguntas: Pregunta[] = [];
+  protected preguntas: Question[] = [];
   protected resultadosExamenes: any[] = [];
-  protected themesList = [] as Theme[];
+  protected themes$ = this.servicioDatosService.temas$;
 
   protected examenGenerado = false;
   protected loading = false;
@@ -64,22 +63,6 @@ export class ExamenesComponent extends QuizForm implements OnInit {
     this.StorageService.resultadosExamenes.subscribe((resultados) => {
       this.resultadosExamenes = resultados;
     });
-
-    this.loadThemesWithRetry();
-  }
-
-  private loadThemesWithRetry() {
-    this.servicioDatosService.temas$
-      .pipe(
-        retryWhen((errors) => errors.pipe(delay(2000))),
-        catchError((error) => {
-          console.error('Failed to load themes after several retries', error);
-          return of([]);
-        })
-      )
-      .subscribe((temas) => {
-        this.themesList = temas;
-      });
   }
 
   protected descargarPreguntas() {

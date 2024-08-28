@@ -2,8 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Pregunta } from 'src/main';
 import { ServicioDatosService } from '../core/services/servicio-datos/servicio-datos.service';
+import { Question } from '../shared/types/question';
 import { Theme } from '../shared/types/theme';
 
 @Component({
@@ -32,7 +32,7 @@ export class GestionarPreguntasComponent implements OnInit {
   respuestaCorrecta: number = 0;
   rutaCambiada = false;
   idPregunta: number = 0;
-  ListaPreguntas: Pregunta[] = [];
+  ListaPreguntas: Question[] = [];
   preguntaSeleccionada = new FormControl();
   preguntaSeleccionadaModificar = new FormControl();
   mensajeEliminar = '';
@@ -106,7 +106,7 @@ export class GestionarPreguntasComponent implements OnInit {
 
           // Obtener todas las preguntas de la base de datos
           this.http
-            .get<Pregunta[]>('https://api-examenes.onrender.com/preguntas')
+            .get<Question[]>('https://api-examenes.onrender.com/preguntas')
             .subscribe(
               (response) => {
                 if (response && response.length > 0) {

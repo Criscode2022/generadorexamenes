@@ -47,11 +47,16 @@
   <h2 class="text-center font-bold">Puntuación</h2>
 
   <p>
-    Respuestas correctas: <strong> {{ respuestasCorrectas }}/{{ preguntas.length }} </strong>
+    Respuestas correctas:
+    <strong> {{ respuestasCorrectas }}/{{ preguntas.length }} </strong>
   </p>
 
   <p>
     Puntuación sobre 10:
-   <strong> {{ (respuestasCorrectas / preguntas.length) * 10 | number : "1.2-2" }}</strong>
+    <strong>
+      {{
+        (respuestasCorrectas / preguntas.length) * 10 | number : "1.2-2"
+      }}</strong
+    >
   </p>
 </div>

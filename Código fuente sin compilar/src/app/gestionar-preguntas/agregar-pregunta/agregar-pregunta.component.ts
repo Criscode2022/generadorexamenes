@@ -2,8 +2,9 @@ import { HttpClient } from '@angular/common/http';
 import { Component, inject, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { ServicioDatosService } from 'src/app/core/services/servicio-datos/servicio-datos.service';
+import { Question } from 'src/app/shared/types/question';
+import { Response } from 'src/app/shared/types/response';
 import { Theme } from 'src/app/shared/types/theme';
-import { Pregunta } from 'src/main';
 
 @Component({
   selector: 'app-agregar-pregunta',
@@ -11,37 +12,30 @@ import { Pregunta } from 'src/main';
   styleUrls: ['./agregar-pregunta.component.css'],
 })
 export class AgregarPreguntaComponent implements OnInit {
-  temas = new FormControl();
-  themesList: Theme[] = [];
-  difficulties: number[] = [1, 2, 3];
-  dificultadSeleccionadaAgregar: number = this.difficulties[0];
-  dificultadSeleccionadaModificar: number = this.difficulties[0];
-  enunciado: string = '';
-  enunciadoModificar: string = '';
-  respuesta1: string = '';
-  respuesta2: string = '';
-  respuesta3: string = '';
-  respuesta4: string = '';
-  respuesta1Correcta: string = 'NO';
-  respuesta2Correcta: string = 'NO';
-  respuesta3Correcta: string = 'NO';
-  respuesta4Correcta: string = 'NO';
-  temaSeleccionado: Theme = this.themesList[0];
-  idPreguntaInsertada: number | undefined = 0;
-  respuestaCorrecta: number = 0;
-  rutaCambiada = false;
-  idPregunta: number = 0;
-  ListaPreguntas: Pregunta[] = [];
-  preguntaSeleccionada = new FormControl();
-  preguntaSeleccionadaModificar = new FormControl();
-  mensajeEliminar = '';
-  mensajeAgregar = '';
-  mensajeAgregarRespuestas = '';
-  mensajeModificar = '';
-  mensajeModificarRespuestas = '';
-
   private http = inject(HttpClient);
   private servicioDatosService = inject(ServicioDatosService);
+
+  protected temas = new FormControl();
+  protected themesList: Theme[] = [];
+  protected selectedTheme: Theme = this.themesList[0];
+
+  protected difficulties: number[] = [1, 2, 3];
+  protected selectedDifficulty: number = this.difficulties[0];
+
+  protected enunciado = '';
+  protected respuesta1 = '';
+  protected respuesta2 = '';
+  protected respuesta3 = '';
+  protected respuesta4 = '';
+
+  private idPreguntaInsertada: number | undefined = 0;
+  private respuestaCorrecta = 0;
+  protected idPregunta = 0;
+  protected ListaPreguntas: Question[] = [];
+  protected preguntaSeleccionada = new FormControl();
+
+  protected mensajeAgregar = '';
+  protected mensajeAgregarRespuestas = '';
 
   ngOnInit() {
     this.obtenerTemas();
@@ -49,24 +43,7 @@ export class AgregarPreguntaComponent implements OnInit {
   }
 
   protected setRespuestaCorrecta(valor: string) {
-    switch (valor) {
-      case '1':
-        this.respuesta1Correcta = 'SI';
-        this.respuestaCorrecta = 1;
-        break;
-      case '2':
-        this.respuesta2Correcta = 'SI';
-        this.respuestaCorrecta = 2;
-        break;
-      case '3':
-        this.respuesta3Correcta = 'SI';
-        this.respuestaCorrecta = 3;
-        break;
-      case '4':
-        this.respuesta4Correcta = 'SI';
-        this.respuestaCorrecta = 4;
-        break;
-    }
+    this.respuestaCorrecta = parseInt(valor);
   }
 
   private obtenerTemas() {
@@ -101,11 +78,10 @@ export class AgregarPreguntaComponent implements OnInit {
   }
 
   protected agregarPregunta() {
-    const temaSeleccionado = this.temas.value.id_tema;
     const data = {
-      id_tema: '' + temaSeleccionado,
+      id_tema: this.temas.value.id_tema,
       pregunta: this.enunciado,
-      dificultad: '' + this.dificultadSeleccionadaAgregar,
+      dificultad: this.selectedDifficulty,
     };
 
     this.http
@@ -115,7 +91,7 @@ export class AgregarPreguntaComponent implements OnInit {
           this.mensajeAgregar = 'Pregunta insertada correctamente';
 
           this.http
-            .get<Pregunta[]>('https://api-examenes.onrender.com/preguntas')
+            .get<Question[]>('https://api-examenes.onrender.com/preguntas')
             .subscribe(
               (response) => {
                 if (!(response && response.length)) {
@@ -143,28 +119,32 @@ export class AgregarPreguntaComponent implements OnInit {
   }
 
   private async agregarRespuestas() {
-    const respuestasData = [
+    const respuestasData: Response[] = [
       {
-        es_correcta: this.respuesta1Correcta === 'SI' ? 'SI' : 'NO',
         id_pregunta: this.idPreguntaInsertada,
         respuesta: this.respuesta1,
       },
       {
-        es_correcta: this.respuesta2Correcta === 'SI' ? 'SI' : 'NO',
         id_pregunta: this.idPreguntaInsertada,
         respuesta: this.respuesta2,
       },
       {
-        es_correcta: this.respuesta3Correcta === 'SI' ? 'SI' : 'NO',
         id_pregunta: this.idPreguntaInsertada,
         respuesta: this.respuesta3,
       },
       {
-        es_correcta: this.respuesta4Correcta === 'SI' ? 'SI' : 'NO',
         id_pregunta: this.idPreguntaInsertada,
         respuesta: this.respuesta4,
       },
     ];
+
+    respuestasData.map((respuesta, index) => {
+      if (index + 1 === this.respuestaCorrecta) {
+        respuesta.es_correcta = 'SI';
+      } else {
+        respuesta.es_correcta = 'NO';
+      }
+    });
 
     respuestasData.sort((a) => (a.es_correcta === 'SI' ? -1 : 1));
 

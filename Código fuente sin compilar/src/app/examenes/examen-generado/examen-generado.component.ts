@@ -9,7 +9,7 @@ import {
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatRadioModule } from '@angular/material/radio';
-import { Pregunta } from 'src/main';
+import { Question } from 'src/app/shared/types/question';
 import { StorageService } from '../../core/services/storage-service/storage.service';
 
 @Component({
@@ -20,7 +20,7 @@ import { StorageService } from '../../core/services/storage-service/storage.serv
   imports: [CommonModule, FormsModule, MatButtonModule, MatRadioModule],
 })
 export class ExamenGeneradoComponent implements OnChanges {
-  @Input() preguntas: Pregunta[] = [];
+  @Input() preguntas: Question[] = [];
   @Input() respuestasUsuario = [] as string[];
 
   private storageService = inject(StorageService);

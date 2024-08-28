@@ -3,8 +3,8 @@ import { Component, inject, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { ServicioDatosService } from 'src/app/core/services/servicio-datos/servicio-datos.service';
+import { Question } from 'src/app/shared/types/question';
 import { Theme } from 'src/app/shared/types/theme';
-import { Pregunta } from 'src/main';
 
 @Component({
   selector: 'app-modificar-pregunta',
@@ -31,7 +31,7 @@ export class ModificarPreguntaComponent implements OnInit {
   idPreguntaInsertada: number | undefined = 0;
   respuestaCorrecta: number = 0;
   idPregunta: number = 0;
-  ListaPreguntas: Pregunta[] = [];
+  ListaPreguntas: Question[] = [];
   preguntaSeleccionada = new FormControl();
   preguntaSeleccionadaModificar = new FormControl();
   mensajeEliminar = '';
@@ -40,7 +40,7 @@ export class ModificarPreguntaComponent implements OnInit {
   mensajeModificar = '';
   mensajeModificarRespuestas = '';
   respuestas: string[] = ['', '', '', ''];
-  preguntasFiltradas: Pregunta[] = [];
+  preguntasFiltradas: Question[] = [];
   private todasLasRespuestas: any[] = [];
 
   private http = inject(HttpClient);

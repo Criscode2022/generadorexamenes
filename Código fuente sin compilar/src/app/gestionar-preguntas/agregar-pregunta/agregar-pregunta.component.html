@@ -12,10 +12,7 @@
 </mat-form-field>
 
 <h3>Selecciona la dificultad</h3>
-<mat-radio-group
-  [(ngModel)]="dificultadSeleccionadaAgregar"
-  name="dificultadSeleccionadaAgregar"
->
+<mat-radio-group [(ngModel)]="selectedDifficulty" name="selectedDifficulty">
   <mat-radio-button
     *ngFor="let dificultad of difficulties"
     [value]="dificultad"
