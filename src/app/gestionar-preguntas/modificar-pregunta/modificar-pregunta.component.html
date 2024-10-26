@@ -1,6 +1,6 @@
 <h2 class="mt-8">Modificar pregunta</h2>
 
-<h3>Selecciona la pregunta que quieres modificar</h3>
+<h3>Elige la pregunta que quieres modificar</h3>
 <mat-autocomplete
   #auto="matAutocomplete"
   [displayWith]="displayFn"
@@ -128,5 +128,10 @@
   Modificar Pregunta
 </button>
 
-<h3 class="text-blue-800">{{ mensajeModificar }}</h3>
-<h3 class="text-blue-800">{{ mensajeModificarRespuestas }}</h3>
+<ng-container *ngIf="message; else loading">
+  <h3 class="text-blue-800 font-bold my-6 pb-4">{{ message }}</h3>
+</ng-container>
+
+<ng-template #loading>
+  <mat-progress-spinner class="m-4" mode="indeterminate"></mat-progress-spinner>
+</ng-template>

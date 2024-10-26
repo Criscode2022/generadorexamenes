@@ -14,7 +14,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { saveAs } from 'file-saver';
 import { RespuestaServidor } from 'src/main';
 import * as XLSX from 'xlsx';
-import { ServicioDatosService } from '../core/services/servicio-datos/servicio-datos.service';
+import { DataService } from '../core/services/data-service/data.service';
 import { StorageService } from '../core/services/storage-service/storage.service';
 import { HeaderModule } from '../header/header.module';
 import { Question } from '../shared/types/question';
@@ -47,12 +47,12 @@ import { QuizForm } from './quiz.form';
 export class ExamenesComponent extends QuizForm implements OnInit {
   private http = inject(HttpClient);
   private StorageService = inject(StorageService);
-  private servicioDatosService = inject(ServicioDatosService);
+  private dataService = inject(DataService);
 
   protected difficulties = [1, 2, 3];
   protected preguntas: Question[] = [];
   protected resultadosExamenes: any[] = [];
-  protected themes$ = this.servicioDatosService.temas$;
+  protected themes$ = this.dataService.temas$;
 
   protected examenGenerado = false;
   protected loading = false;
@@ -103,7 +103,10 @@ export class ExamenesComponent extends QuizForm implements OnInit {
     };
 
     this.http
-      .post<RespuestaServidor>('https://api-examenes.onrender.com/examen', data)
+      .post<RespuestaServidor>(
+        'https://api-workspace-wczh.onrender.com/quizzes/examen',
+        data
+      )
       .subscribe(
         (response) => {
           this.preguntas = response.preguntas;

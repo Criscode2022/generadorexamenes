@@ -1,5 +1,5 @@
 @media (max-width: 765px) {
   mat-form-field {
-    width: 80%;
+    @apply w-4/5;
   }
 }

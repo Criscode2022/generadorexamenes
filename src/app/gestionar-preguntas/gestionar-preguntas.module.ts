@@ -8,6 +8,7 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatOptionModule } from '@angular/material/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatSelectModule } from '@angular/material/select';
 import { GestionarPreguntasComponent } from '../gestionar-preguntas/gestionar-preguntas.component';
@@ -35,6 +36,7 @@ import { ModificarPreguntaComponent } from './modificar-pregunta/modificar-pregu
     MatFormFieldModule,
     MatInputModule,
     MatOptionModule,
+    MatProgressSpinnerModule,
     MatRadioModule,
     MatSelectModule,
   ],

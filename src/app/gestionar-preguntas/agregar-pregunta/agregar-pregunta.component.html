@@ -1,15 +1,16 @@
 <h2 class="mt-8">Agregar pregunta</h2>
 
 <h3>Selecciona el tema de la pregunta</h3>
-
-<mat-form-field>
-  <mat-label>Temas</mat-label>
-  <mat-select [formControl]="temas">
-    <mat-option *ngFor="let tema of themesList" [value]="tema">{{
-      tema.tema
-    }}</mat-option>
-  </mat-select>
-</mat-form-field>
+<ng-container *ngIf="themes$ | async as themes; else loading">
+  <mat-form-field>
+    <mat-label>Temas</mat-label>
+    <mat-select [formControl]="theme">
+      <mat-option *ngFor="let theme of themes" [value]="theme">{{
+        theme.tema
+      }}</mat-option>
+    </mat-select>
+  </mat-form-field>
+</ng-container>
 
 <h3>Selecciona la dificultad</h3>
 <mat-radio-group [(ngModel)]="selectedDifficulty" name="selectedDifficulty">
@@ -25,7 +26,7 @@
 <mat-form-field>
   <mat-label>Enunciado</mat-label>
   <input
-    [(ngModel)]="enunciado"
+    [(ngModel)]="questionText"
     name="enunciado"
     matInput
     placeholder="Enunciado"
@@ -42,8 +43,7 @@
     <mat-form-field>
       <mat-label>Respuesta 1</mat-label>
       <input
-        [(ngModel)]="respuesta1"
-        name="respuesta1"
+        [(ngModel)]="answer1"
         matInput
         placeholder="Respuesta 1"
         type="text"
@@ -57,8 +57,7 @@
     <mat-form-field>
       <mat-label>Respuesta 2</mat-label>
       <input
-        [(ngModel)]="respuesta2"
-        name="respuesta2"
+        [(ngModel)]="answer2"
         matInput
         placeholder="Respuesta 2"
         type="text"
@@ -72,8 +71,7 @@
     <mat-form-field>
       <mat-label>Respuesta 3</mat-label>
       <input
-        [(ngModel)]="respuesta3"
-        name="respuesta3"
+        [(ngModel)]="answer3"
         matInput
         placeholder="Respuesta 3"
         type="text"
@@ -87,8 +85,7 @@
     <mat-form-field>
       <mat-label>Respuesta 4</mat-label>
       <input
-        [(ngModel)]="respuesta4"
-        name="respuesta4"
+        [(ngModel)]="answer4"
         matInput
         placeholder="Respuesta 4"
         type="text"
@@ -98,9 +95,28 @@
   </div>
 </div>
 
-<button mat-raised-button color="primary" (click)="agregarPregunta()">
+<button
+  mat-raised-button
+  color="primary"
+  [disabled]="
+    !answer1 ||
+    !answer2 ||
+    !answer3 ||
+    !answer4 ||
+    !questionText ||
+    !selectedDifficulty ||
+    !theme.value ||
+    !respuestaCorrecta
+  "
+  (click)="agregarPregunta()"
+>
   Agregar pregunta
 </button>
 
-<h3 class="text-blue-800">{{ mensajeAgregar }}</h3>
-<h3 class="text-blue-800">{{ mensajeAgregarRespuestas }}</h3>
+<ng-container *ngIf="message && load; else loading">
+  <h3 class="text-blue-800 font-bold my-6 pb-4">{{ message }}</h3>
+</ng-container>
+
+<ng-template #loading>
+  <mat-progress-spinner class="m-4" mode="indeterminate"></mat-progress-spinner>
+</ng-template>

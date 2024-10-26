@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Component, inject, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
-import { ServicioDatosService } from 'src/app/core/services/servicio-datos/servicio-datos.service';
+import { DataService } from 'src/app/core/services/data-service/data.service';
 import { Question } from 'src/app/shared/types/question';
 import { Theme } from 'src/app/shared/types/theme';
 
@@ -34,31 +34,28 @@ export class ModificarPreguntaComponent implements OnInit {
   ListaPreguntas: Question[] = [];
   preguntaSeleccionada = new FormControl();
   preguntaSeleccionadaModificar = new FormControl();
-  mensajeEliminar = '';
-  mensajeAgregar = '';
-  mensajeAgregarRespuestas = '';
-  mensajeModificar = '';
-  mensajeModificarRespuestas = '';
+  message = '';
   respuestas: string[] = ['', '', '', ''];
   preguntasFiltradas: Question[] = [];
   private todasLasRespuestas: any[] = [];
 
   private http = inject(HttpClient);
-  private servicioDatosService = inject(ServicioDatosService);
+  private dataService = inject(DataService);
 
   private obtenerRespuestas() {
-    this.http.get('https://api-examenes.onrender.com/respuestas').subscribe(
-      (data: any) => {
-        this.todasLasRespuestas = data;
-      },
-      (error) => {
-        console.error('Error al obtener datos del servicio REST:', error);
-      }
-    );
+    this.http
+      .get('https://api-workspace-wczh.onrender.com/quizzes/respuestas')
+      .subscribe(
+        (data: any) => {
+          this.todasLasRespuestas = data;
+        },
+        (error) => {
+          console.error('Error al obtener datos del servicio REST:', error);
+        }
+      );
   }
 
   ngOnInit() {
-    this.obtenerTemas();
     this.obtenerPreguntas();
     this.obtenerRespuestas();
 
@@ -114,12 +111,12 @@ export class ModificarPreguntaComponent implements OnInit {
     try {
       await this.http
         .put(
-          `https://api-examenes.onrender.com/preguntas/${this.preguntaSeleccionadaModificar.value.id_pregunta}`,
+          `https://api-workspace-wczh.onrender.com/quizzes/preguntas/${this.preguntaSeleccionadaModificar.value.id_pregunta}`,
           preguntaModificada
         )
         .toPromise();
-      this.mensajeModificar = 'Pregunta modificada correctamente';
-      this.servicioDatosService.actualizarPreguntas();
+      this.message = 'Pregunta modificada correctamente';
+      this.dataService.loadPreguntas();
 
       const respuestas = this.todasLasRespuestas.filter(
         (respuesta) =>
@@ -158,45 +155,28 @@ export class ModificarPreguntaComponent implements OnInit {
         try {
           await this.http
             .put(
-              `https://api-examenes.onrender.com/respuestas/${respuestaExistente.id_respuesta}`,
+              `https://api-workspace-wczh.onrender.com/quizzes/respuestas/${respuestaExistente.id_respuesta}`,
               respuestaModificada
             )
             .toPromise();
-          this.mensajeModificarRespuestas += ` Respuesta ${
-            i + 1
-          } modificada correctamente`;
+          this.message += ` Respuesta ${i + 1} modificada correctamente`;
         } catch (error: any) {
           console.error('Error modificando la respuesta:', error);
-          this.mensajeModificarRespuestas += `Error modificando la respuesta ${
-            i + 1
-          }: ${error.message}`;
+          this.message += `Error modificando la respuesta ${i + 1}: ${
+            error.message
+          }`;
         }
       }
 
-      this.servicioDatosService.actualizarPreguntas();
+      this.dataService.loadPreguntas();
     } catch (error: any) {
       console.error('Error modificando la pregunta:', error);
-      this.mensajeModificar = `Error modificando la pregunta: ${error.message}`;
+      this.message = `Error modificando la pregunta: ${error.message}`;
     }
   }
 
-  private obtenerTemas() {
-    this.servicioDatosService.temas$.subscribe(
-      (data) => {
-        if (!data) {
-          return;
-        }
-
-        this.themesList = data;
-      },
-      (error) => {
-        console.error('Error al obtener datos del servicio REST:', error);
-      }
-    );
-  }
-
   private obtenerPreguntas() {
-    this.servicioDatosService.preguntas$.subscribe(
+    this.dataService.preguntas$.subscribe(
       (data) => {
         if (!(data && data.length)) {
           return;

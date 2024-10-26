@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, inject, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { ServicioDatosService } from 'src/app/core/services/servicio-datos/servicio-datos.service';
+import { DataService } from 'src/app/core/services/data-service/data.service';
 import { Question } from 'src/app/shared/types/question';
 import { Theme } from 'src/app/shared/types/theme';
 
@@ -41,7 +41,7 @@ export class EliminarPreguntaComponent implements OnInit {
   preguntasFiltradas: Question[] = [];
 
   private http = inject(HttpClient);
-  private servicioDatosService = inject(ServicioDatosService);
+  private dataService = inject(DataService);
 
   ngOnInit() {
     this.obtenerTemas();
@@ -57,7 +57,10 @@ export class EliminarPreguntaComponent implements OnInit {
 
   protected eliminarPregunta() {
     this.http
-      .delete('https://api-examenes.onrender.com/preguntas/' + this.idPregunta)
+      .delete(
+        'https://api-workspace-wczh.onrender.com/quizzes/preguntas/' +
+          this.idPregunta
+      )
       .subscribe(
         (res) => {
           if (res === false) {
@@ -65,7 +68,7 @@ export class EliminarPreguntaComponent implements OnInit {
             this.mensajeEliminar = 'Error al eliminar la pregunta';
           } else {
             this.mensajeEliminar = 'Pregunta eliminada correctamente';
-            this.servicioDatosService.actualizarPreguntas();
+            this.dataService.loadPreguntas();
           }
         },
         (err) => {
@@ -77,7 +80,7 @@ export class EliminarPreguntaComponent implements OnInit {
   }
 
   protected obtenerTemas() {
-    this.servicioDatosService.temas$.subscribe(
+    this.dataService.temas$.subscribe(
       (data) => {
         if (!data) {
           return;
@@ -92,7 +95,7 @@ export class EliminarPreguntaComponent implements OnInit {
   }
 
   private obtenerPreguntas() {
-    this.servicioDatosService.preguntas$.subscribe(
+    this.dataService.preguntas$.subscribe(
       (data) => {
         if (!(data && data.length)) {
           return;
